@@ -5,18 +5,20 @@ const TodoList = require("./todoList");
 const fs = require('fs')
 const {OAuth2Client} = require('google-auth-library');
 
-const CLIENT_ID1 = '';
-const CLIENT_ID2 = '';
-const CLIENT_ID3 = '';
-
+var CLIENT_ID1 = '';
+var CLIENT_ID2 = '';
+var CLIENT_ID3 = '';
 try {
-    if (fs.existsSync('./local_info')) {
-       const {CLIENT_ID1,CLIENT_ID2,CLIENT_ID3} = require('./local_info')
+    if (fs.existsSync('./local_info.js')) {
+        const CLIENT_ID = require('./local_info');
+        CLIENT_ID1 = CLIENT_ID.CLIENT_ID1;
+        CLIENT_ID2 = CLIENT_ID.CLIENT_ID2;
+        CLIENT_ID3 = CLIENT_ID.CLIENT_ID3;
     }
   } catch(err) {
     console.error(err)
 }
-// const {CLIENT_ID1,CLIENT_ID2,CLIENT_ID3} = require('./local_info')
+
 const client = new OAuth2Client(CLIENT_ID1);
 
 const DB_URL = "mongodb://localhost:27017";
