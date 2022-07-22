@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/tdl"
+            android:title="To-do-list"
+            android:icon="@mipmap/tdl_foreground"/>
+    <item
+            android:id="@+id/friends"
+            android:title="Friends"
+            android:icon="@mipmap/friend_foreground"/>
+    <item
+            android:id="@+id/leaderboard"
+            android:title="Leaderboard"
+            android:icon="@mipmap/lb_foreground"/>
+    <item
+            android:id="@+id/profile"
+            android:title="Profile"
+            android:icon="@mipmap/profile_foreground"/>
+
+</menu>

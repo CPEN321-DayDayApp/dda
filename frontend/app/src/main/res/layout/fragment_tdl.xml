@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/tdlPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        app:umanoAnchorPoint="0.3"
+        app:umanoInitialState="collapsed"
+        app:umanoPanelHeight="100dp"
+        app:umanoShadowHeight="4dp"
+        app:umanoDragView="@id/dragView"
+        app:umanoScrollableView="@id/list"
+        app:umanoParallaxOffset="0dp"
+        app:umanoFadeColor="#00000000"
+        app:umanoClipPanel="true"
+        app:umanoOverlay="false" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"
+                tools:context=".Map" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/dragView"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:layout_margin="0dp"
+            android:padding="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/handle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_round_more_horiz_24"
+                    />
+
+
+            </RelativeLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
+
+
+        </LinearLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
+
+</FrameLayout>

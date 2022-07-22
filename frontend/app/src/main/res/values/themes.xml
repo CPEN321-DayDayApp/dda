@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.DayDayApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#50857A</item>
+        <item name="colorPrimaryVariant">#356856</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#6ea398</item>
+        <item name="colorSecondaryVariant">#4A7766</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.DayDayApp.Fullscreen" parent="Theme.DayDayApp">
+        <item name="android:actionBarStyle">@style/Widget.Theme.DayDayApp.ActionBar.Fullscreen
+        </item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="ThemeOverlay.DayDayApp.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/whiteGreen</item>
+        <item name="fullscreenTextColor">#356856</item>
+    </style>
+</resources>
