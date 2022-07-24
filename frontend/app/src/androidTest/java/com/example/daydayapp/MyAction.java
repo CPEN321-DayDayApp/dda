@@ -1,6 +1,7 @@
 package com.example.daydayapp;
 
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -41,6 +42,9 @@ public class MyAction implements ViewAction {
                 break;
             case "search":
                 ((SearchView) view).setQuery(query, true);
+                break;
+            case "fill":
+                ((TextView) view).setText(query);
                 break;
             default:
         }

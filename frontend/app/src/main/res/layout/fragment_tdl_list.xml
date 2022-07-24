@@ -23,9 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="340dp"
         android:backgroundTint="@color/white"
-        android:src="@drawable/ic_baseline_add_circle"
         android:scaleX="1.5"
-        android:scaleY="1.5"/>
+        android:scaleY="1.5"
+        android:src="@drawable/ic_baseline_add_circle" />
 
     <ToggleButton
         android:id="@+id/start_study_button"
