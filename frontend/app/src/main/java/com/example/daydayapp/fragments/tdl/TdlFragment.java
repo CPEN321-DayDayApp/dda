@@ -35,6 +35,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -56,6 +57,7 @@ import java.util.Map;
 
 public class TdlFragment extends Fragment implements LocationListener {
 
+    private final int SCALE = 1000000;
     private final String TAG = "Tdl";
     private final LatLng VANCOUVER = new LatLng(49.248292, -123.116226);
     private RequestQueue queue;
@@ -139,8 +141,8 @@ public class TdlFragment extends Fragment implements LocationListener {
                         final String url = "http://13.89.36.134:8000/location";
 
                         HashMap<String, Double> content = new HashMap<>();
-                        content.put("lat", location.latitude);
-                        content.put("lng", location.longitude);
+                        content.put("lat", (int) (location.latitude * SCALE) / (double) SCALE);
+                        content.put("lng", (int) (location.longitude * SCALE) / (double) SCALE);
                         String stringContent = new JSONObject(content).toString();
                         Log.e(TAG, stringContent);
                         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, response -> {
@@ -190,7 +192,7 @@ public class TdlFragment extends Fragment implements LocationListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.tasksAdapter = new ToDoAdapter(requireActivity());
-        this.tdlListFragment = new TdlListFragment(this.tasksAdapter, main);
+        this.tdlListFragment = new TdlListFragment(this.tasksAdapter, main, TdlFragment.this);
         this.locationList = new ArrayList<>();
         this.queue = Volley.newRequestQueue(requireActivity());
         tasksAdapter.setTdlListFragment(this.tdlListFragment);
@@ -320,6 +322,13 @@ public class TdlFragment extends Fragment implements LocationListener {
         autocompleteFragment.setLocationBias(RectangularBounds.newInstance(
                 new LatLng(current.latitude - 1, current.longitude - 1),
                 new LatLng(current.latitude + 1, current.longitude + 1)));
+    }
+
+    public void refreshMarker() {
+        Log.i(TAG, "Hi");
+        googleMap.clear();
+        locationList.clear();
+        getAndMarkAllStudyLocations();
     }
 
 

@@ -13,7 +13,7 @@
         android:gravity="bottom"
         app:umanoAnchorPoint="0.3"
         app:umanoInitialState="collapsed"
-        app:umanoPanelHeight="100dp"
+        app:umanoPanelHeight="140dp"
         app:umanoShadowHeight="4dp"
         app:umanoDragView="@id/dragView"
         app:umanoScrollableView="@id/list"
@@ -64,6 +64,7 @@
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_round_more_horiz_24"
                     />
+
 
 
             </RelativeLayout>

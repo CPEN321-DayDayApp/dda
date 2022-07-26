@@ -29,6 +29,7 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -40,6 +41,7 @@ import com.example.daydayapp.model.ToDoModel;
 import com.example.daydayapp.R;
 import com.example.daydayapp.recycleritemtouchhepler.TdlRecyclerItemTouchHelper;
 import com.google.android.gms.maps.model.LatLng;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +49,7 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,21 +58,24 @@ import java.util.Objects;
 public class TdlListFragment extends Fragment implements LocationListener {
     private static final String TAG = "TdlList";
     private final MainActivity main;
+    private TdlFragment tdlFragment;
     private final ToDoAdapter tasksAdapter;
     private Location currLocation;
 
     private AlertDialog dialog;
     private EditText newTaskPopup_title;
+    private Button delete_location_button;
     private Button newTaskPopup_select_date_button;
     private Button newTaskPopup_select_duration_button;
     private ToggleButton start_study_button;
     private DatePickerDialog datePickerDialog;
     private int score = 0;
 
-    public TdlListFragment(ToDoAdapter tasksAdapter, MainActivity main) {
+    public TdlListFragment(ToDoAdapter tasksAdapter, MainActivity main, TdlFragment tdlFragment) {
         // Required empty public constructor
         this.tasksAdapter = tasksAdapter;
         this.main = main;
+        this.tdlFragment = tdlFragment;
     }
 
     @Override
@@ -98,6 +104,7 @@ public class TdlListFragment extends Fragment implements LocationListener {
         listRecyclerView.setAdapter(tasksAdapter);
         ImageButton addTaskButton = view.findViewById(R.id.add_task_button);
         start_study_button = view.findViewById(R.id.start_study_button);
+        delete_location_button = view.findViewById(R.id.delete_location_button);
 
         addTaskButton.setOnClickListener(v -> {
             if (tasksAdapter.getCurrentStudyLocation() == null)
@@ -276,6 +283,50 @@ public class TdlListFragment extends Fragment implements LocationListener {
                     queue.add(deleteStringRequest);
                 }
             }
+        });
+
+        delete_location_button.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(TdlListFragment.this.getContext());
+            builder.setTitle("Delete this study location");
+            builder.setMessage("Are you sure you want to delete this study location?");
+            builder.setPositiveButton("Confirm", (dialog, which) -> {
+                RequestQueue queue = Volley.newRequestQueue(main);
+                final String urlDeleteLocation = "http://13.89.36.134:8000/location";
+                HashMap<String, Double> deleteContent = new HashMap<>();
+                deleteContent.put("lat", tasksAdapter.getCurrentStudyLocation().latitude);
+                deleteContent.put("lng", tasksAdapter.getCurrentStudyLocation().longitude);
+                JSONObject jsonContent = new JSONObject(deleteContent);
+                final String deleteLocationRequestBody = jsonContent.toString();
+                StringRequest deleteLocationRequest = new StringRequest(Request.Method.DELETE, urlDeleteLocation,
+                        response -> {
+                            tdlFragment.refreshMarker();
+                        }, error -> Log.e(TAG, error.toString())) {
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @Override
+                    public byte[] getBody() {
+                        return deleteLocationRequestBody.getBytes(StandardCharsets.UTF_8);
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", main.getAccount().getIdToken());
+                        headers.put("lat", String.valueOf(tasksAdapter.getCurrentStudyLocation().latitude));
+                        headers.put("lng", String.valueOf(tasksAdapter.getCurrentStudyLocation().longitude));
+                        return headers;
+                    }
+                };
+
+                queue.add(deleteLocationRequest);
+
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new TdlRecyclerItemTouchHelper(tasksAdapter, main));

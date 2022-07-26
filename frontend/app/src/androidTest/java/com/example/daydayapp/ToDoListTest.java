@@ -25,6 +25,9 @@ import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import static com.example.daydayapp.GoogleMapTestHelper.findMarkerAndClick;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +55,7 @@ public class ToDoListTest {
         assertEquals("com.example.daydayapp", appContext.getPackageName());
     }
 
-    @Before
+    @Test
     public void clickAddTaskButton() throws InterruptedException {
         findMarkerAndClick("1");
         // Check if add task button exists and click it
@@ -82,14 +85,17 @@ public class ToDoListTest {
     }
 
     @Test
-    public void clickCancelNewTaskButton() {
+    public void clickCancelNewTaskButton() throws InterruptedException {
+        clickAddTaskButton();
         onView(withId(R.id.newTaskPopup_cancelButton)).perform(new MyAction("click"));
         //check if dialog dismissed
         onView(withId(R.id.addTaskTextView)).check(doesNotExist());
     }
 
     @Test
-    public void saveTaskWithoutTitle() {
+    public void addTaskWithoutTitle() throws InterruptedException {
+        clickAddTaskButton();
+
         //click "SAVE" button directly without filling task name
         onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
         // Check if the toast message is displayed correctly
@@ -97,7 +103,10 @@ public class ToDoListTest {
     }
 
     @Test
-    public void saveValidTask() throws InterruptedException {
+    public void addValidTaskThenEditThenDelete() throws InterruptedException {
+        /* Add valid task */
+        clickAddTaskButton();
+
         // fill in the task description
         onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "test task 0"));
         onView(withId(R.id.newTaskPopup_select_date_button)).perform(new MyAction("fill", "AUG 15 2022"));
@@ -106,40 +115,35 @@ public class ToDoListTest {
         //check if task added
         Thread.sleep(1000);
         onView(withId(R.id.listRecyclerView)).check(matches(hasDescendant(withText("test task 0"))));
-    }
 
-    @Test
-    public void editTask() throws InterruptedException {
-        saveValidTask();
+        /* Edit task */
         Thread.sleep(1000);
         // Swipe right on the newly added task in test
         onView(withId(R.id.listRecyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeRight()));
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         // Check if edit task popup is displayed and shows correct text
         onView(withId(R.id.addTaskTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.addTaskTextView)).check(matches(withText("New Task")));
         onView(withId(R.id.newTaskPopup_title)).check(matches(withText("test task 0")));
         onView(withId(R.id.newTaskPopup_select_date_button)).check(matches(withText("AUG 15 2022")));
         onView(withId(R.id.newTaskPopup_select_duration_button)).check(matches(withText("45")));
-        //edit task
+        // Edit task
         onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "edit task 0"));
-        onView(withId(R.id.newTaskPopup_select_date_button)).perform(new MyAction("fill", "DEC 23 2023"));
+        onView
+                (withId(R.id.newTaskPopup_select_date_button)).perform(new MyAction("fill", "DEC 23 2023"));
         onView(withId(R.id.newTaskPopup_select_duration_button)).perform(new MyAction("fill", "30"));
         onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
-        //check if task edited
+        // Check if task edited
         Thread.sleep(1000);
         onView(withId(R.id.listRecyclerView)).check(matches(hasDescendant(withText("edit task 0"))));
-    }
 
-    @Test
-    public void deleteTask() throws InterruptedException {
-        editTask();
+        /* Delete task */
         Thread.sleep(1000);
         // Swipe left on the newly added task in test
         onView(withId(R.id.listRecyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeLeft()));
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         //check if popup dialog shows
         onView(withText("Delete Task")).check(matches(isDisplayed()));
         //click cancel button and check if dialog disappears
@@ -163,17 +167,5 @@ public class ToDoListTest {
         final String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
         return months[month] + " " + day + " " + year;
-    }
-
-    private void findMarkerAndClick(String position) throws InterruptedException {
-        Thread.sleep(3000);
-        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        UiObject marker = mDevice.findObject(new UiSelector().descriptionContains(position));
-        try {
-            marker.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        Thread.sleep(1000);
     }
 }
