@@ -286,6 +286,11 @@ public class TdlListFragment extends Fragment implements LocationListener {
         });
 
         delete_location_button.setOnClickListener(v -> {
+            if (tasksAdapter.getCurrentStudyLocation() == null) {
+                Toast.makeText(getActivity(), "You do not have a study location", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             AlertDialog.Builder builder = new AlertDialog.Builder(TdlListFragment.this.getContext());
             builder.setTitle("Delete this study location");
             builder.setMessage("Are you sure you want to delete this study location?");
