@@ -33,13 +33,6 @@ public class UpdateScoreTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void sampleTest() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.daydayapp", appContext.getPackageName());
-    }
-
-    @Test
     public void updateScore() throws InterruptedException {
         // get current score
         onView(withId(R.id.leaderboard)).perform(click());
