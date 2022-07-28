@@ -30,4 +30,7 @@
     <string name="mins">mins</string>
     <string name="save">Save</string>
     <string name="sample_data">Sample Data</string>
+    <string name="other">Other</string>
+    <string name="me">Me</string>
+    <string name="start_compete">Start Compete</string>
 </resources>
