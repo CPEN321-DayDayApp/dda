@@ -408,7 +408,7 @@ public class TdlListFragment extends Fragment implements LocationListener {
 
         newTaskPopup_saveButton.setOnClickListener(v -> {
             // Check if all fields are filled
-            if (newTaskPopup_title.getText().toString().isEmpty()
+            if (newTaskPopup_title.getText().toString().trim().isEmpty()
                     || newTaskPopup_select_date_button.getText().toString().isEmpty()
                     || newTaskPopup_select_duration_button.getText().toString().isEmpty()) {
                 Toast.makeText(getActivity(), "Please fill all the fields", Toast.LENGTH_SHORT).show();

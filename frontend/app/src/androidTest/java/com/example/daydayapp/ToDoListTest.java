@@ -86,6 +86,18 @@ public class ToDoListTest {
     }
 
     @Test
+    public void addTaskWithAllSpaceTitle() throws InterruptedException {
+        clickAddTaskButton();
+
+        //add title with only white spaces
+        onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "    "));
+        //click "SAVE" button
+        onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
+        // Check if the toast message is displayed correctly
+        onView(withText("Please fill all the fields")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void addValidTaskThenEditThenDelete() throws InterruptedException {
         /* Add valid task */
         clickAddTaskButton();
