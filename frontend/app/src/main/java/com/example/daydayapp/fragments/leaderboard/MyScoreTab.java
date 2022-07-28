@@ -82,6 +82,7 @@ public class MyScoreTab extends Fragment {
 //        competeUserName = "Victor Pei";
 //        competeUserScore = 20;
 //        compete_other_score.setText(String.valueOf(competeUserScore));
+//        competeUserNameTv.setText(competeUserName);
 
         if (competeUserName == null || competeUserName.trim().isEmpty()) {
             competeLayout.setVisibility(View.GONE);
@@ -94,6 +95,7 @@ public class MyScoreTab extends Fragment {
             competeUserName = "Victor Pei";
             competeUserScore = 20;
             compete_other_score.setText(String.valueOf(competeUserScore));
+            competeUserNameTv.setText(competeUserName);
             setScore(score);
 
             // TODO: change sleep to request
