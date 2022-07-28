@@ -5,6 +5,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -67,6 +68,7 @@ public class SearchAndSetLocationTest {
                                 1),
                         isDisplayed()));
         clickSearchBar.perform(click());
+        Thread.sleep(500);
 
         // Set search text as "MacMillan"
         ViewInteraction setSearchText = onView(
@@ -79,6 +81,8 @@ public class SearchAndSetLocationTest {
                                 1),
                         isDisplayed()));
         setSearchText.perform(replaceText("MacMillan"), closeSoftKeyboard());
+        Thread.sleep(500);
+        onView(withText("MacMillan Building")).check(matches(isDisplayed()));
 
         // Click on the first result
         ViewInteraction recyclerView = onView(
@@ -87,19 +91,37 @@ public class SearchAndSetLocationTest {
                                 withClassName(is("android.widget.LinearLayout")),
                                 2)));
         recyclerView.perform(actionOnItemAtPosition(0, click()));
+        Thread.sleep(500);
 
         findMarkerAndClick("MacMillan Building");
+        Thread.sleep(500);
+        onView(withText("Set as Study Location")).check(matches(isDisplayed()));
+
+        // Click cancel
+        onView(withText("CANCEL")).perform(new MyAction("click"));
+        Thread.sleep(500);
+        onView(withText("Set as Study Location")).check(doesNotExist());
+
+        clickSearchBar.perform(click());
+        Thread.sleep(500);
+        // Click on the first result
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        Thread.sleep(500);
+        findMarkerAndClick("MacMillan Building");
+        Thread.sleep(500);
 
         // Click confirm to add study location
         onView(withText("CONFIRM")).perform(new MyAction("click"));
+        Thread.sleep(500);
 
         // Click on the marker. If there's no dialog, it means it's already a study location
-        findMarkerAndClick("2");
+        findMarkerAndClick("3");
         onView(withId(R.id.tdlPanel)).check(matches(not(hasDescendant(withText("Set as Study Location")))));
 
         // Delete the newly added location
         onView(withId(R.id.delete_location_button)).perform(new MyAction("click"));
         onView(withText("CONFIRM")).perform(new MyAction("click"));
+        Thread.sleep(500);
     }
 
     @Test
@@ -109,16 +131,27 @@ public class SearchAndSetLocationTest {
         // Click on the (500, 500) pixel on the screen (randomly chosen point to click on map)
         onView(withId(R.id.tdlPanel)).perform(clickXY(500, 500));
 
-        findMarkerAndClick("2");
+        findMarkerAndClick("3");
+        Thread.sleep(500);
+        // Click cancel
+        onView(withText("CANCEL")).perform(new MyAction("click"));
+        onView(withText("Set as Study Location")).check(doesNotExist());
+
+        onView(withId(R.id.tdlPanel)).perform(clickXY(500, 500));
+        findMarkerAndClick("3");
+        Thread.sleep(500);
 
         onView(withText("CONFIRM")).perform(new MyAction("click"));
+        Thread.sleep(500);
 
         // Click on the marker. If there's no dialog, it means it's already a study location
-        findMarkerAndClick("2");
+        findMarkerAndClick("3");
         onView(withId(R.id.tdlPanel)).check(matches(not(hasDescendant(withText("Set as Study Location")))));
 
         onView(withId(R.id.delete_location_button)).perform(new MyAction("click"));
+        Thread.sleep(500);
         onView(withText("CONFIRM")).perform(new MyAction("click"));
+        Thread.sleep(500);
     }
 
     public static ViewAction clickXY(final int x, final int y){
