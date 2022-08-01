@@ -1,7 +1,9 @@
 package com.example.daydayapp;
 
 import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -13,6 +15,7 @@ import org.hamcrest.Matcher;
 public class MyAction implements ViewAction {
     private final String action;
     private String query;
+    private CharSequence text;
 
     public MyAction(String action) {
         this.action = action;
@@ -42,7 +45,18 @@ public class MyAction implements ViewAction {
             case "search":
                 ((SearchView) view).setQuery(query, true);
                 break;
+            case "fill":
+                ((TextView) view).setText(query);
+                break;
+            case "read":
+                TextView tv = (TextView)view;
+                text = tv.getText();
+                break;
             default:
         }
+    }
+
+    public int getText() {
+        return Integer.parseInt(String.valueOf(text));
     }
 }

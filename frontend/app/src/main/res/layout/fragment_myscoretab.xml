@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Current Score:"
+        android:text="@string/current_score"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
@@ -28,7 +29,6 @@
         android:indeterminateOnly="false"
         android:progressDrawable="@drawable/circle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/currentScoreText"
@@ -44,5 +44,112 @@
         app:layout_constraintStart_toStartOf="@+id/myScore"
         app:layout_constraintTop_toTopOf="@+id/myScore"
         android:textStyle="bold"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/competeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myScore">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/compete_result"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textColor="@color/quantum_googgreen"/>
+
+        <ProgressBar
+            android:id="@+id/competeBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:progressBackgroundTint="@color/quantum_googred"
+            android:progressTint="@color/quantum_googgreen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.396" />
+
+        <TextView
+            android:id="@+id/compete_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/me"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/competeBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.088"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.925" />
+
+        <TextView
+            android:id="@+id/compete_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/competeBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.912"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.925" />
+
+        <TextView
+            android:id="@+id/score_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.149"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/competeBar"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/score_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.853"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/competeBar"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/compete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_compete"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myScore"
+        app:layout_constraintVertical_bias="0.555" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

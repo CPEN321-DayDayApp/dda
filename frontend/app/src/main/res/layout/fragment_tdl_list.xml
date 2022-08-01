@@ -5,12 +5,25 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <Button
+        android:id="@+id/delete_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_baseline_add_circle"
+        android:text="@string/delete_this_study_location"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:backgroundTint="#8b0000"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/listText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/delete_location_button"
         android:textStyle="bold"
-        android:text="To-do-list"
+        android:text="@string/to_do_list"
         android:textColor="@color/black"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
@@ -21,27 +34,30 @@
         android:id="@+id/add_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/delete_location_button"
         android:layout_marginStart="340dp"
         android:backgroundTint="@color/white"
-        android:src="@drawable/ic_baseline_add_circle"
         android:scaleX="1.5"
-        android:scaleY="1.5"/>
+        android:scaleY="1.5"
+        android:src="@drawable/ic_baseline_add_circle" />
 
     <ToggleButton
         android:id="@+id/start_study_button"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
+        android:layout_width="70dp"
+        android:layout_height="35dp"
         android:padding="0dp"
-        android:layout_marginStart="220dp"
+        android:layout_marginStart="250dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/delete_location_button"
         android:backgroundTint="@color/white"
-        android:textOff="Start"
-        android:textOn="End"
+        android:textOff="@string/start"
+        android:textOn="@string/end"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:textColor="#50857A"
         android:src="@drawable/ic_baseline_add_circle"
-        android:scaleX="1.5"
-        android:scaleY="1.5"/>
+        android:scaleX="1.2"
+        android:scaleY="1.2"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listRecyclerView"
