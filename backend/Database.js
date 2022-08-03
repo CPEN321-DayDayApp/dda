@@ -75,7 +75,7 @@ Database.prototype.addUser = function(userid, email, name, token){
                        resolve("user already exists")
                    }
                 })
-                db.collection(userid).insertOne({'_id': "userinfo", token, email, name,'age':25,'gender':"male",'score':0,'status': false, 'location':[], 'friendlist': []})
+                db.collection(userid).insertOne({'_id': "userinfo", token, email, name,'age':25,'gender':"male",'score':0,'status': false, 'opponentid':'0', 'location':[], 'friendlist': []})
                 .then((result) => { resolve(result); }, (err) => { reject(err); })
             })
             
@@ -89,6 +89,24 @@ Database.prototype.getUser = function(userid, email){
             db.collection(userid)
                 .findOne({email})
                 .then((result) => { resolve({'name':result.name,'age':result.age,'gender':result.gender,'score':result.score, 'rank': 0, 'status': result.status, 'token': result.token}); }, (err) => { reject(err); });
+        })
+    )
+}
+
+Database.prototype.getAllUsers = function(){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.listCollections().toArray(function(err, collinfos) {
+                if(err) reject(err);
+                var users=[];
+                collinfos.forEach(collinfo => {
+                   db.collection(collinfo['name']).findOne({'_id': "userinfo"}).then(result=>{
+                    users.push({'userid':collinfo['name'],'age':result.age,'gender':result.gender,'score':result.score})
+                    if(users.length==collinfos.length) resolve(users)
+                   })
+                })
+            })
+            
         })
     )
 }
@@ -277,6 +295,19 @@ Database.prototype.editScore = function(userid, score){
                 .updateOne(
                     { _id: "userinfo" },
                     { $set: {score} }
+                )
+                .then((result) => { resolve(result); }, (err) => { reject(err); });
+        })
+    )
+}
+
+Database.prototype.editOpponentId = function(userid, opponentid){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.collection(userid)
+                .updateOne(
+                    { _id: "userinfo" },
+                    { $set: {opponentid} }
                 )
                 .then((result) => { resolve(result); }, (err) => { reject(err); });
         })
