@@ -238,11 +238,46 @@ app.put("/tdl/:taskid", async (req, res) => {
 });
 
 //add new task to the tdl
-app.put("/user/score", async (req, res) => {
+app.put("/user/score", async (req,res)=>{
+    verify(req.headers['authorization'])
+    .then((result)=>{
+        info.editScore(result.userid, req.body.score).then(response =>{
+            if(response==404) res.status(404).send("User not found")
+            else{
+                leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
+                    res.status(200).send("Score edited successfully\n")
+                })
+            }
+        }).catch(err =>{
+            res.status(400).send(err)
+        })
+    })
+    .catch(console.error);
+});
+
+//edit user status
+app.put("/user/gender", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
-            leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
-                res.status(200).send("Score edited successfully\n")
+            info.editGender(result.userid, req.body.gender).then(result => {
+                if (result == 404) res.status(404).send("User not found")
+                else res.status(200).send("Gender edited successfully\n")
+            }).catch(err => {
+                res.status(400).send(err)
+            })
+        })
+        .catch(console.error);
+});
+
+//edit user status
+app.put("/user/age", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            info.editAge(result.userid, req.body.age).then(result => {
+                if (result == 404) res.status(404).send("User not found")
+                else res.status(200).send("Gender edited successfully\n")
+            }).catch(err => {
+                res.status(400).send(err)
             })
         })
         .catch(console.error);

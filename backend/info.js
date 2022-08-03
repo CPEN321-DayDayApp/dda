@@ -81,6 +81,34 @@ function Info(user){
             }
         })
     }
+
+    this.editGender = function(userid, gender){
+        return new Promise((resolve, reject) => {
+            if(!isNaN(userid)&&typeof(userid)!=Number){
+                user.editGender(userid, gender).then(result=>{
+                    if(result==0) resolve(404)
+                    else resolve(200)
+                })
+            }
+            else{
+                reject("Invalid Input")
+            }
+        })
+    }
+
+    this.editAge = function(userid, age){
+        return new Promise((resolve, reject) => {
+            if(!isNaN(userid)&&typeof(userid)!=Number&&!isNaN(age)){
+                user.editAge(userid, age).then(result=>{
+                    if(result==0) resolve(404)
+                    else resolve(200)
+                })
+            }
+            else{
+                reject("Invalid Input")
+            }
+        })
+    }
     
     this.editStatus = function(userid, status){
         return new Promise((resolve, reject) => {

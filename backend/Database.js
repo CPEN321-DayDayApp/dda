@@ -75,7 +75,7 @@ Database.prototype.addUser = function(userid, email, name, token){
                        resolve("user already exists")
                    }
                 })
-                db.collection(userid).insertOne({'_id': "userinfo", token, email, name, 'status': false, 'location':[], 'friendlist': []})
+                db.collection(userid).insertOne({'_id': "userinfo", token, email, name,'age':25,'gender':"male",'score':0,'status': false, 'location':[], 'friendlist': []})
                 .then((result) => { resolve(result); }, (err) => { reject(err); })
             })
             
@@ -88,7 +88,7 @@ Database.prototype.getUser = function(userid, email){
         new Promise((resolve, reject) => {
             db.collection(userid)
                 .findOne({email})
-                .then((result) => { resolve({'name':result.name,'score':result.score, 'rank': 0, 'status': result.status, 'token': result.token}); }, (err) => { reject(err); });
+                .then((result) => { resolve({'name':result.name,'age':result.age,'gender':result.gender,'score':result.score, 'rank': 0, 'status': result.status, 'token': result.token}); }, (err) => { reject(err); });
         })
     )
 }
@@ -292,6 +292,47 @@ Database.prototype.editToken = function(userid, token){
                     { $set: {token} }
                 )
                 .then((result) => { resolve(result); }, (err) => { reject(err); });
+        })
+    )
+}
+
+Database.prototype.editGender = function(userid, gender){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.collection(userid)
+                .updateOne(
+                    { _id: "userinfo" },
+                    { $set: {gender} }
+                )
+                .then((result) => { resolve(result); }, (err) => { reject(err); });
+        })
+    )
+}
+
+Database.prototype.editAge = function(userid, age){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.collection(userid)
+                .updateOne(
+                    { _id: "userinfo" },
+                    { $set: {age} }
+                )
+                .then((result) => { resolve(result); }, (err) => { reject(err); });
+        })
+    )
+}
+
+Database.prototype.increaseAge = function(){
+    return this.connected.then(db =>
+        db.listCollections().toArray(function(err, collinfos) {
+            if(err) reject(err);
+            collinfos.forEach(collinfo => {
+                db.collection(collinfo['name'])
+                    .updateOne(
+                        { _id: "userinfo" },
+                        { $inc: {age: 1} }
+                    )
+            })
         })
     )
 }

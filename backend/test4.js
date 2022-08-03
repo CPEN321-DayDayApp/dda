@@ -64,7 +64,30 @@ module.exports = () => describe('integration test', () => {
           return done();
         })
     });
-    
+    test("put gender: successful", (done) => {
+      request(app)
+        .put('/user/gender')
+        .set('Authorization', "friend")
+        .set('Content-Type', 'application/json')
+        .send({"gender": "female"})
+        .expect(200)
+        .end(function(err,res){
+          if(err) return done(err)
+          return done();
+        })
+    });
+    test("put age: successful", (done) => {
+      request(app)
+        .put('/user/age')
+        .set('Authorization', "friend")
+        .set('Content-Type', 'application/json')
+        .send({"age": 50})
+        .expect(200)
+        .end(function(err,res){
+          if(err) return done(err)
+          return done();
+        })
+    });
     test("put score: successful", (done) => {
         request(app)
           .put('/user/score')

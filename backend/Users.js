@@ -242,6 +242,32 @@ function Users(db){
             })
         })
     }
+
+    this.editAge = function(userid, age){
+        return new Promise((resolve, reject) => {
+            this.userExist(userid).then(result=>{
+                if(result==0) resolve(0)
+                else{
+                    db.editAge(userid, age).then(result =>{
+                        resolve(result)
+                    })
+                }
+            })
+        })
+    }
+
+    this.editGender = function(userid, gender){
+        return new Promise((resolve, reject) => {
+            this.userExist(userid).then(result=>{
+                if(result==0) resolve(0)
+                else{
+                    db.editGender(userid, gender).then(result =>{
+                        resolve(result)
+                    })
+                }
+            })
+        })
+    }
     
     this.editStatus = function(userid, status){
         return new Promise((resolve, reject) => {
