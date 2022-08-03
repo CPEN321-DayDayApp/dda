@@ -1,14 +1,12 @@
 
-
-function TodoList(db){
-    if (!(this instanceof TodoList)) return new TodoList();
+function TodoList(user){
     this.addTDL = function(userid, id, lat, lng, task, time, date){
         return new Promise((resolve,reject)=>{
-            if(!isNaN(userid)&&!isNaN(id)&&!isNaN(time)&&!isNaN(lat)&&!isNaN(lng)&&task!=null&&isNaN(date)){
-                db.addTDL(userid, id, lat, lng, task, time, date).then(result =>{
-                    resolve(result)
-                }).catch(err =>{
-                    reject(err)
+            if(!isNaN(userid)&&typeof(userid)!=Number&&!isNaN(id)&&!isNaN(time)&&!isNaN(lat)&&!isNaN(lng)&&task!=null&&isNaN(date)){
+                user.addTDL(userid, id, lat, lng, task, time, date).then(result =>{
+                    if(result==0) resolve(404)
+                    else if(result==1) resolve(405)
+                    else resolve(200)
                 })
             }
             else{
@@ -18,11 +16,11 @@ function TodoList(db){
     }
     this.getTDL = function(userid){
         return new Promise((resolve, reject) => {
-                if(!isNaN(userid)){
-                    db.getTDL(userid).then(result =>{
-                        resolve(result)
-                    }).catch(err =>{
-                        reject(err)
+                if(!isNaN(userid)&&typeof(userid)!=Number){
+                    user.getTDL(userid).then(result =>{
+                        if(result==0) resolve(404)
+                        else if(result==1) resolve(201)
+                        else resolve(result)
                     })
                 }
                 else{
@@ -32,11 +30,11 @@ function TodoList(db){
     }
     this.deleteTDL = function(userid,taskid){
         return new Promise((resolve, reject) => {
-                if(!isNaN(userid)&&!isNaN(taskid)){
-                    db.deleteTDL(userid,taskid).then(result =>{
-                        resolve(result)
-                    }).catch(err =>{
-                        reject(err)
+                if(!isNaN(userid)&&typeof(userid)!=Number&&!isNaN(taskid)){
+                    user.deleteTDL(userid,taskid).then(result =>{
+                        if(result==0) resolve(404)
+                        else if(result==1) resolve(405)
+                        else resolve(200)
                     })
                 }
                 else{
@@ -46,11 +44,11 @@ function TodoList(db){
     }
     this.editTDL = function(userid, id, lat, lng, task, time, date){
         return new Promise((resolve, reject) => {
-                if(!isNaN(userid)&&!isNaN(id)&&!isNaN(time)&&!isNaN(lat)&&!isNaN(lng)&&task!=null&&isNaN(date)){
-                    db.editTDL(userid, id, lat, lng, task, time, date).then(result =>{
-                        resolve(result)
-                    }).catch(err =>{
-                        reject(err)
+                if(!isNaN(userid)&&typeof(userid)!=Number&&!isNaN(id)&&!isNaN(time)&&!isNaN(lat)&&!isNaN(lng)&&task!=null&&isNaN(date)){
+                    user.editTDL(userid, id, lat, lng, task, time, date).then(result =>{
+                        if(result==0) resolve(404)
+                        else if(result==1) resolve(405)
+                        else resolve(200)
                     })
                 }
                 else{
