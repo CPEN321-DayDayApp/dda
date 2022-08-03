@@ -4,7 +4,8 @@
         "express": "^4.18.1",
         "firebase-admin": "^11.0.0",
         "google-auth-library": "^8.1.0",
-        "mongodb": "^4.6.0"
+        "mongodb": "^4.6.0",
+        "python-shell": "^3.0.1"
     },
     "devDependencies": {
         "jest": "^28.1.3",
