@@ -161,7 +161,10 @@ public class MyScoreTab extends Fragment {
 
     private void setCompeteProgress(int score) {
         int totalScore = score + competeUserScore;
-        competeBar.setProgress((score * 100) / totalScore);
+        if (totalScore == 0)
+            competeBar.setProgress(50);
+        else
+            competeBar.setProgress((score * 100) / totalScore);
     }
 
     private void setProgress(int score) {

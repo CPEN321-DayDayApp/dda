@@ -14,10 +14,14 @@ public class VPAdapter extends FragmentStateAdapter {
 
 //    private final String[] titles = {"MyScore", "Friends", "Global"};
     private final MyScoreTab myScoreTab;
+    private final GlobalTab globalTab;
+    private final FriendsTab friendsTab;
 
     public VPAdapter(@NonNull LeaderboardFragment fragmentActivity, MainActivity main) {
         super(fragmentActivity);
         this.myScoreTab = new MyScoreTab(main);
+        this.globalTab = new GlobalTab(main);
+        this.friendsTab = new FriendsTab(main);
     }
 
     @NonNull
@@ -25,9 +29,9 @@ public class VPAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position) {
             case 1:
-                return new FriendsTab();
+                return this.friendsTab;
             case 2:
-               return new GlobalTab();
+               return this.globalTab;
             default:
                 return this.myScoreTab;
         }
