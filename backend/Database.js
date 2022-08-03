@@ -75,7 +75,7 @@ Database.prototype.addUser = function(userid, email, name, token){
                        resolve("user already exists")
                    }
                 })
-                db.collection(userid).insertOne({'_id': "userinfo", token, email, name, 'score':0, 'status': false, 'location':[], 'friendlist': []})
+                db.collection(userid).insertOne({'_id': "userinfo", token, email, name, 'status': false, 'location':[], 'friendlist': []})
                 .then((result) => { resolve(result); }, (err) => { reject(err); })
             })
             

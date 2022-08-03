@@ -34,6 +34,7 @@ function Friend(user){
             if(!isNaN(userid)&&typeof(userid)!=Number&&!isNaN(friendId)&&(/\S[^\s@]*@\S+\.\S+/.test(email))){
                 user.addFriend(userid,email,name,friendId).then(result =>{
                     if(result==0) resolve(404)
+                    else if(result==1) resolve(201)
                     else resolve(200)
                 })
             }
@@ -48,7 +49,7 @@ function Friend(user){
                 user.deleteFriend(userid,email).then(result =>{
                     if(result==0) resolve(404)
                     else if(result==1) resolve(405)
-                    else resolve(200)
+                    else resolve(result)
                 })
             }
             else{

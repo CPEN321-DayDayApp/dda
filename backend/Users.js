@@ -141,9 +141,10 @@ function Users(db){
             this.friendExist(userid,friendId).then(result=>{
                 if(result==0) resolve(0)
                 else{
-                    db.addFriend(userid,email,name,friendId).then(response =>{
-                        db.addFriend(friendId, email,name,userid).then(result=>{
-                            resolve(1)
+                    db.addFriend(userid,email,name,friendId).then(result =>{
+                        if(result=="already friend") resolve(1)
+                        else db.addFriend(friendId, email,name,userid).then(result=>{
+                            resolve(2)
                         })
                     })
                 }
@@ -157,8 +158,8 @@ function Users(db){
                 else{
                     db.deleteFriend(userid,email).then(result =>{
                         if(result=="already not friend") resolve(1)
-                        else db.deleteFriend(result.friendId, result.email).then(result=>{
-                            resolve(2)
+                        else db.deleteFriend(result.friendId, result.email).then(response=>{
+                            resolve({"friendId":result.friendId})
                         })
                     })
                 }
