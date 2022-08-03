@@ -5,6 +5,7 @@ on:
     branches:
       - backend_test 
       - main
+      - GitHub_action
   pull_request:
     branches:  
       - main 
@@ -17,8 +18,14 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+        mongodb-version: ['5.0']
 
     steps:
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
       - uses: actions/checkout@v3
       - name: Start test
         uses: actions/setup-node@v3
