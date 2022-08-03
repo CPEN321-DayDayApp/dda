@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "child_process": "^1.0.2",
+        "cron": "^2.1.0",
         "express": "^4.18.1",
         "firebase-admin": "^11.0.0",
         "google-auth-library": "^8.1.0",
