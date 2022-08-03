@@ -6,7 +6,7 @@ const Friend = require("./friend")
 const Info = require("./info")
 const LeaderBoard = require("./leaderboard")
 const MatchMaking = require("./matchmaking")
-const PythonShell = require('python-shell')
+const {PythonShell} = require('python-shell')
 
 //const { exec } = require("child_process");
 const {
