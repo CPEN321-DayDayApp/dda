@@ -62,7 +62,7 @@ app.use(express.json({
 app.get("/user", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
-            db.getUser(result.userid, result.email).then(result => {
+            db.getUser(result.userid).then(result => {
                 res.status(200).send(JSON.stringify(result))
             })
         })

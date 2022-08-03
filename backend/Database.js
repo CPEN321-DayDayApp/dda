@@ -83,11 +83,11 @@ Database.prototype.addUser = function(userid, email, name, token){
     )
 }
 
-Database.prototype.getUser = function(userid, email){
+Database.prototype.getUser = function(userid){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
             db.collection(userid)
-                .findOne({email})
+                .findOne({_id:"userinfo"})
                 .then((result) => { resolve({'name':result.name,'age':result.age,'gender':result.gender,'score':result.score, 'rank': 0, 'status': result.status, 'token': result.token}); }, (err) => { reject(err); });
         })
     )
