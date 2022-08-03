@@ -19,7 +19,6 @@ const payload ={
 const options = {priority: 'high', timeToLive: 60*60*24}
 
 function Database(mongoUrl, dbName){
-    if (!(this instanceof Database)) return new Database(mongoUrl, dbName);
     this.connected = new Promise((resolve, reject) => {
         MongoClient.connect(
             mongoUrl,
@@ -35,10 +34,6 @@ function Database(mongoUrl, dbName){
             }
         )
     });
-    this.status = () => this.connected.then(
-        db => ({ error: null, url: mongoUrl, db: dbName }),
-        err => ({ error: err })
-    );
 }
 Database.prototype.pn = function(userid, email){
     return this.connected.then(db =>
@@ -51,18 +46,22 @@ Database.prototype.pn = function(userid, email){
                     }
               } })
             .then(result=>{
-                if(result==null) reject("no such friend")
-                result.friendlist.forEach(element => {
-                    if(element.email==email){
-                        db.collection(element.friendId).findOne({_id:"userinfo"})
-                        .then(result=>{
-                            admin.messaging().sendToDevice(result.token,payload,options).then(result =>{
-                                resolve(result)}, err=>{reject(err)})
-                        }, err =>{reject(err)})
-                    }
-                })
-                resolve(result)
-            }, err=>{reject(err)})
+                if(result==null) resolve("no such friend")
+                else{
+                    result.friendlist.forEach(element => {
+                        if(element.email==email){
+                            db.collection(element.friendId).findOne({_id:"userinfo"})
+                            .then(result=>{
+                                if(result.status==true) resolve(1)
+                                else{
+                                    admin.messaging().sendToDevice(result.token,payload,options).then(result =>{
+                                        resolve(result)}, err=>{reject(err)})
+                                }
+                            })
+                        }
+                    })
+                }
+            })
         })
     )
 }
@@ -110,7 +109,9 @@ Database.prototype.getFriendList = function(userid){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
             db.collection(userid).findOne({ _id: "userinfo" })
-            .then((result) => { resolve({"friendlist":result.friendlist});}, (err) => { reject(err); });
+            .then((result) => { 
+                if(result.friendlist.length==0) resolve(1);
+                else resolve({"friendlist":result.friendlist});}, (err) => { reject(err); });
         })
     )
 }
@@ -128,8 +129,8 @@ Database.prototype.getFriend = function(userid, email){
                             if(result!=null){
                                 resolve({"name": result.name, "friendId": collinfo['name']})
                             }
-                            if(index===collinfos.length-1) reject("No such user")
-                        },(err) => { reject(err); })
+                            if(index===collinfos.length) resolve(0)
+                        })
                 })
             })
         })
@@ -139,32 +140,30 @@ Database.prototype.getFriend = function(userid, email){
 Database.prototype.addFriend = function(userid, email, name, friendId){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
-            this.getFriend(userid,email).then(()=>{
-                db.collection(userid).findOne({
-                    _id:"userinfo",
-                    friendlist: {
-                      $elemMatch: {
-                        email
-                      }
+            db.collection(userid).findOne({
+                _id:"userinfo",
+                friendlist: {
+                    $elemMatch: {
+                    email
                     }
-                  })
-                  .then((result)=>{
-                    if(result == null){
-                    db.collection(friendId).findOne({_id:"userinfo" })
-                    .then(result=>{
-                        db.collection(userid).updateOne(
-                            { _id: "userinfo" },
-                            { $addToSet: { friendlist: {friendId, "name": result.name, "email": result.email, "status": result.status} } }
-                        )
-                        .then((result) => { resolve(result);}, 
-                            (err) => { reject(err); });
-                    },(err)=>{reject(err)})
-                    }
-                    else{
-                        reject("already friend")
-                    }
-                  },(err)=>{reject(err)})
-            }, err=>reject(err))
+                }
+                })
+                .then((result)=>{
+                if(result == null){
+                db.collection(friendId).findOne({_id:"userinfo" })
+                .then(result=>{
+                    db.collection(userid).updateOne(
+                        { _id: "userinfo" },
+                        { $addToSet: { friendlist: {friendId, "name": result.name, "email": result.email, "status": result.status} } }
+                    )
+                    .then((result) => { resolve(result);}, 
+                    );
+                })
+                }
+                else{
+                    resolve("already friend")
+                }
+                })
         })
     )
 }
@@ -175,7 +174,7 @@ return this.connected.then(db =>
         db.collection(userid).findOne({ _id: "userinfo" })
         .then((result) => { resolve({"location":result.location});}, (err) => { reject(err); });
     })
-)
+    )
 }
 
 Database.prototype.addTDL = function(userid, _id, lat, lng, task, time, date){
@@ -194,7 +193,8 @@ Database.prototype.getTDL = function(userid){
                 .toArray((err, result)=>{
                     if(err) reject(err)
                     else{
-                        resolve(result)
+                        if(result.length==0) resolve(1)
+                        else resolve(result)
                     }
                 }
                 )
@@ -228,7 +228,7 @@ Database.prototype.deleteFriend = function(userid, email){
                 )
                 .then((response) => { resolve({"friendId":id,"email":result.email}); }, (err) => { reject(err); });
                 }
-                else reject("already not friend")
+                else resolve("already not friend")
               })
         })
     )
@@ -314,7 +314,7 @@ Database.prototype.editStatus = function(userid, status){
                             )
                         })
                         resolve(result)
-                    }, err=>{reject(err)})
+                    })
                 });
         })
     )

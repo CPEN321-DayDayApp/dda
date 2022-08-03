@@ -11,6 +11,6 @@
         "supertest": "^6.2.4"
     },
     "scripts": {
-        "test": "jest --runInBand --forceExit"
+        "test": "jest --runInBand --forceExit --coverage"
     }
 }
