@@ -5,8 +5,8 @@ const Users = require("./Users")
 const Friend = require("./friend")
 const Info = require("./info")
 const LeaderBoard = require("./leaderboard")
-const MatchMaking = require("./matchmaking")
 const {PythonShell} = require('python-shell')
+const CronJob = require('cron').CronJob;
 
 //const { exec } = require("child_process");
 const {
@@ -31,7 +31,6 @@ const tdl = new TodoList(user)
 const friend = new Friend(user)
 const info = new Info(user)
 const leaderboard = new LeaderBoard(db2)
-const matchmaking = new MatchMaking(db);
 const predict = new PythonShell('ml/predict.py');
 
 async function verify(token) {
@@ -54,6 +53,41 @@ async function verify(token) {
     // If request specified a G Suite domain:
     // const domain = payload['hd'];
 }
+
+var newWeek = new CronJob(
+    '59 59 23 * * 0',
+    function () {
+        console.log('You will see this message every Sunday at 23:59:59');
+        // get userid, age, gender, study time from database
+        // db.getAllUser().then(users => {
+        //     predict.send(users);
+        //     predict.on('message', function (message) {
+
+        //     })
+        //     predict.end(function (err, code, signal) {
+        //         if (err) throw err;
+        //         console.log('The exit code was: ' + code);
+        //         console.log('The exit signal was: ' + signal);
+        //         console.log('finished');
+        //     });
+        // });
+    },
+    null,
+    true,
+    'America/Los_Angeles'
+);
+
+var newYear = new CronJob(
+    '59 59 23 31 11 *',
+    function () {
+        console.log('You will see this message every 31st December at 23:59:59');
+        db.increaseAge();
+    },
+    null,
+    true,
+    'America/Los_Angeles'
+);
+
 // app.use(express.json());
 app.use(express.json({
     limit: '50mb'
@@ -160,31 +194,6 @@ app.get("/opponent", async (req, res) => {
             })
         })
         .catch(console.error);
-});
-
-app.get("/matchmaking", async (req, res) => {
-    verify(req.headers['authorization'])
-        .then((result) => {
-            db.getUser(result.userid, result.email).then(result => {
-                // res.status(200).send(JSON.stringify(result))
-                predict.send(result);
-                predict.on('message', function (message) {
-                        matchmaking.getOpponent(result.userid, message).then(result => {
-                            if (result == 201) res.status(201).send("No Player")
-                            else res.status(200).send(JSON.stringify(result))
-                        }).catch(err => {
-                            res.status(400).send(err)
-                        })
-                    })
-                    .catch(console.error);
-                predict.end(function (err, code, signal) {
-                    if (err) throw err;
-                    console.log('The exit code was: ' + code);
-                    console.log('The exit signal was: ' + signal);
-                    console.log('finished');
-                });
-            });
-        })
 });
 
 //add new location
