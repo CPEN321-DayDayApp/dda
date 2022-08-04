@@ -4,13 +4,17 @@ import sys
 input = []
 
 for line in sys.stdin:
-    # print(line)
+    # print("reveive a line: " + line)
+    if(line == "\n"):
+        break
     line = line.split(',')
     for i in range(len(line)):
         line[i] = int(line[i])
     input.append(line)
 
-with open('model.pickle', 'rb') as f:
+# print(input)
+
+with open('ml/model.pickle', 'rb') as f:
     model = pickle.load(f)
 
-print(model.predict(input).tolist())
+print(''.join(map(str, model.predict(input).tolist())))
