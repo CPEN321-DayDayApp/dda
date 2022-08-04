@@ -5,7 +5,9 @@ const Users = require("./Users")
 const Friend = require("./friend")
 const Info = require("./info")
 const LeaderBoard = require("./leaderboard")
-const {PythonShell} = require('python-shell')
+const {
+    PythonShell
+} = require('python-shell')
 const CronJob = require('cron').CronJob;
 
 //const { exec } = require("child_process");
@@ -61,7 +63,7 @@ var newWeek = new CronJob(
         console.log('You will see this message every Sunday at 23:59:59');
 
         //compute all competition results and update scores
-        
+
         let updatedScore = [];
 
         leaderboard.getGlobalBoard().then(result => {
@@ -104,8 +106,14 @@ var newWeek = new CronJob(
                                             gb[i].modified = 1;
                                         }
                                     }
-                                    updatedScore.push({"userid": currUser.userid, "score": rankScore1});
-                                    updatedScore.push({"userid": currOpponent.id, "score": rankScore2});
+                                    updatedScore.push({
+                                        "userid": currUser.userid,
+                                        "score": rankScore1
+                                    });
+                                    updatedScore.push({
+                                        "userid": currOpponent.id,
+                                        "score": rankScore2
+                                    });
                                 } else {
                                     for (let i = 0; i < gb.length; i++) {
                                         if (gb[i]._id == currUser.userid) {
@@ -114,21 +122,31 @@ var newWeek = new CronJob(
                                             gb[i].modified = 1;
                                         }
                                     }
-                                    updatedScore.push({"userid": currUser.userid, "score": rankScore1});
-                                    updatedScore.push({"userid": currOpponent.id, "score": rankScore2});
+                                    updatedScore.push({
+                                        "userid": currUser.userid,
+                                        "score": rankScore1
+                                    });
+                                    updatedScore.push({
+                                        "userid": currOpponent.id,
+                                        "score": rankScore2
+                                    });
                                 }
                                 console.log(updatedScore)
-                                // leaderboard.scoreUpdate(updatedScore).then(result => {
-                                //     console.log(result)
-                                // });
+                                leaderboard.scoreUpdate(updatedScore).then(result => {
+                                    console.log(result)
+                                });
                                 updatedScore = [];
                             }
                         })
                     }
                 })
+            }).catch(err => {
+                console.log(err)
             })
+        }).catch(err => {
+            console.log(err)
         })
-        
+
 
         // db.getAllUsers().then(users => {
         //     let input = [];
@@ -340,34 +358,34 @@ app.put("/tdl/:taskid", async (req, res) => {
 });
 
 //add new task to the tdl
-app.put("/user/score", async (req,res)=>{
+app.put("/user/score", async (req, res) => {
     verify(req.headers['authorization'])
-    .then((result)=>{
-        info.editScore(result.userid, req.body.score).then(response =>{
-            if(response==404) res.status(404).send("User not found")
-            else{
-                leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
-                    res.status(200).send("Score edited successfully\n")
-                })
-            }
-        }).catch(err =>{
-            res.status(400).send(err)
+        .then((result) => {
+            info.editScore(result.userid, req.body.score).then(response => {
+                if (response == 404) res.status(404).send("User not found")
+                else {
+                    leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
+                        res.status(200).send("Score edited successfully\n")
+                    })
+                }
+            }).catch(err => {
+                res.status(400).send(err)
+            })
         })
-    })
-    .catch(console.error);
+        .catch(console.error);
 });
 
 //add new task to the tdl
-app.put("/allboards", async (req,res)=>{
+app.put("/allboards", async (req, res) => {
     verify(req.headers['authorization'])
-    .then((result)=>{
-        leaderboard.updateAllBoard(req.body.users).then(response =>{
-            res.status(200).send("Score edited successfully\n")
-        }).catch(err =>{
-            res.status(400).send(err)
+        .then((result) => {
+            leaderboard.updateAllBoard(req.body.users).then(response => {
+                res.status(200).send("Score edited successfully\n")
+            }).catch(err => {
+                res.status(400).send(err)
+            })
         })
-    })
-    .catch(console.error);
+        .catch(console.error);
 });
 
 //edit user status
@@ -461,17 +479,17 @@ app.delete("/tdl/:taskid", async (req, res) => {
 });
 
 //add new location
-app.post("/friend/:email", async (req,res)=>{
-        verify(req.headers['authorization'])
-        .then((result)=>{
-            friend.addFriend(result.userid,req.params['email'],req.body.name,req.body.friendId).then(response =>{
-                if(response==404) res.status(404).send("User not found\n")
-                else if(response==201) res.status(201).send("already friend\n")
-                else{
-                    Promise.all([leaderboard.addToFriendBoard(result.userid,req.body.friendId),leaderboard.addToFriendBoard(req.body.friendId,result.userid)])
-                    .then(response=>{
-                        res.status(200).send("Friend added successfully\n")
-                    })
+app.post("/friend/:email", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            friend.addFriend(result.userid, req.params['email'], req.body.name, req.body.friendId).then(response => {
+                if (response == 404) res.status(404).send("User not found\n")
+                else if (response == 201) res.status(201).send("already friend\n")
+                else {
+                    Promise.all([leaderboard.addToFriendBoard(result.userid, req.body.friendId), leaderboard.addToFriendBoard(req.body.friendId, result.userid)])
+                        .then(response => {
+                            res.status(200).send("Friend added successfully\n")
+                        })
                 }
             }).catch(err => {
                 res.status(400).send(err)
@@ -507,19 +525,19 @@ app.get("/friend/:email", async (req, res) => {
         .catch(console.error);
 });
 
-app.delete("/friend/:email", async (req,res)=>{
-        verify(req.headers['authorization'])
-        .then((result)=>{
-            friend.deleteFriend(result.userid,req.params['email']).then(response =>{
-                if(response==404) res.status(response).send("User not found\n") 
-                else if(response==405) res.status(response).send("Friend not exist\n")
-                else{
-                    Promise.all([leaderboard.removeFromFriendBoard(result.userid,response.friendId),leaderboard.removeFromFriendBoard(response.friendId,result.userid)])
-                    .then(response=>{
-                        res.status(200).send("Friend deleted successfully\n")
-                    })
+app.delete("/friend/:email", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            friend.deleteFriend(result.userid, req.params['email']).then(response => {
+                if (response == 404) res.status(response).send("User not found\n")
+                else if (response == 405) res.status(response).send("Friend not exist\n")
+                else {
+                    Promise.all([leaderboard.removeFromFriendBoard(result.userid, response.friendId), leaderboard.removeFromFriendBoard(response.friendId, result.userid)])
+                        .then(response => {
+                            res.status(200).send("Friend deleted successfully\n")
+                        })
                 }
-            }).catch(err =>{
+            }).catch(err => {
                 res.status(400).send(err)
             })
         })
