@@ -280,12 +280,11 @@ Database.prototype.deleteFriend = function(userid, email){
 Database.prototype.deleteLocation = function(userid, lat, lng){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
-            db.collection(userid)
+            Promise.all([db.collection(userid)
             .updateOne(
                 { _id: "userinfo" },
                 { $pull: { location: {lat, lng} } }
-             )
-                .then((result) => { resolve(result); }, (err) => { reject(err); });
+             ), db.collection(userid).deleteMany({lat,lng})]).then(values=>resolve(values))
         })
     )
 }
