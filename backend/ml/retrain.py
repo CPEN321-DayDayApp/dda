@@ -6,11 +6,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import sklearn.linear_model as lm
 
-df = pd.read_csv("dataset/final.csv", index_col=[0]).reset_index(drop=True)
+df = pd.read_csv("ml/dataset/final.csv", index_col=[0]).reset_index(drop=True)
 
 input = []
 
 for line in sys.stdin:
+    if(line == "\n"):
+        break
     print(line)
     line = line.split(',')
     for i in range(len(line)):
@@ -21,7 +23,7 @@ df_tmp = pd.DataFrame(input, columns=['age', 'gender', 'study', 'level'])
 df_new = df.append(df_tmp)
 
 print(df_new.info())
-df_new.to_csv('dataset/final.csv')
+df_new.to_csv('ml/dataset/final.csv')
 
 def calc_acc(pred, exp):
     cnt = 0
@@ -49,7 +51,7 @@ Y_pred = classifier.predict(X_test)
 
 print(calc_acc(Y_pred, Y_test))
 
-with open('model.pickle', 'wb') as f:
+with open('ml/model.pickle', 'wb') as f:
     pickle.dump(classifier, f, pickle.HIGHEST_PROTOCOL)
 
 print("Model retrained")

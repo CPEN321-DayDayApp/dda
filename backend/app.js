@@ -5,7 +5,9 @@ const Users = require("./Users")
 const Friend = require("./friend")
 const Info = require("./info")
 const LeaderBoard = require("./leaderboard")
-const {PythonShell} = require('python-shell')
+const {
+    PythonShell
+} = require('python-shell')
 const CronJob = require('cron').CronJob;
 
 //const { exec } = require("child_process");
@@ -33,6 +35,7 @@ const friend = new Friend(user)
 const info = new Info(user)
 const leaderboard = new LeaderBoard(db2)
 const predict = new PythonShell('ml/predict.py');
+const retrain = new PythonShell('ml/retrain.py');
 
 async function verify(token) {
     const ticket = await client.verifyIdToken({
@@ -61,14 +64,24 @@ var newWeek = new CronJob(
         console.log('You will see this message every Sunday at 23:59:59');
 
         //compute all competition results and update scores
-        
+
         let updatedScore = [];
 
         leaderboard.getGlobalBoard().then(result => {
             result.globalboard.forEach(element => element['modified'] = 0);
             let gb = result.globalboard;
+            let retrainInput = [];
             db.getAllUsers().then(users => {
                 users.forEach(user => {
+                    retrainInput.push(user.age)
+                    retrainInput.push(',')
+                    if (user.gender == 'male') retrainInput.push(0)
+                    else retrainInput.push(1)
+                    retrainInput.push(',')
+                    retrainInput.push(Math.round(user.score * 15 / 7))
+                    retrainInput.push(',')
+                    retrainInput.push(Math.round(user.score))
+                    retrainInput.push('\n')
                     let findUser = gb.filter(obj => {
                         return obj._id == user.userid
                     });
@@ -104,8 +117,14 @@ var newWeek = new CronJob(
                                             gb[i].modified = 1;
                                         }
                                     }
-                                    updatedScore.push({"userid": currUser.userid, "score": rankScore1});
-                                    updatedScore.push({"userid": currOpponent.id, "score": rankScore2});
+                                    updatedScore.push({
+                                        "userid": currUser.userid,
+                                        "score": rankScore1
+                                    });
+                                    updatedScore.push({
+                                        "userid": currOpponent.id,
+                                        "score": rankScore2
+                                    });
                                 } else {
                                     for (let i = 0; i < gb.length; i++) {
                                         if (gb[i]._id == currUser.userid) {
@@ -114,44 +133,85 @@ var newWeek = new CronJob(
                                             gb[i].modified = 1;
                                         }
                                     }
-                                    updatedScore.push({"userid": currUser.userid, "score": rankScore1});
-                                    updatedScore.push({"userid": currOpponent.id, "score": rankScore2});
+                                    updatedScore.push({
+                                        "userid": currUser.userid,
+                                        "score": rankScore1
+                                    });
+                                    updatedScore.push({
+                                        "userid": currOpponent.id,
+                                        "score": rankScore2
+                                    });
                                 }
                                 console.log(updatedScore)
-                                // leaderboard.scoreUpdate(updatedScore).then(result => {
-                                //     console.log(result)
-                                // });
+                                leaderboard.scoreUpdate(updatedScore).then(result => {
+                                    console.log(result)
+                                });
                                 updatedScore = [];
                             }
                         })
                     }
                 })
+                retrain.send(retrainInput.join(''));
+                retrain.on('message', function (message) {
+                    console.log(message);
+                })
+                retrain.end(function (err, code, signal) {
+                    if (err) throw err;
+                    console.log('The exit code was: ' + code);
+                    console.log('The exit signal was: ' + signal);
+                    console.log('finished');
+                });
+            }).catch(err => {
+                console.log(err)
             })
+        }).catch(err => {
+            console.log(err)
         })
-        
 
-        // db.getAllUsers().then(users => {
-        //     let input = [];
-        //     users.forEach(element => {
-        //         input.push(element.age)
-        //         input.push(',')
-        //         if (element.gender == 'male') input.push(0)
-        //         else input.push(1)
-        //         input.push(',')
-        //         input.push(int(int(element.score) * 15 / 7))
-        //         input.push('\n')
-        //     });
-        //     predict.send(input.join(''));
-        //     predict.on('message', function (message) {
-        //         console.log(message);
-        //     })
-        //     predict.end(function (err, code, signal) {
-        //         if (err) throw err;
-        //         console.log('The exit code was: ' + code);
-        //         console.log('The exit signal was: ' + signal);
-        //         console.log('finished');
-        //     });
-        // });
+
+        db.getAllUsers().then(users => {
+            console.log(users)
+            let input = [];
+            users.forEach(element => {
+                input.push(element.age)
+                input.push(',')
+                if (element.gender == 'male') input.push(0)
+                else input.push(1)
+                input.push(',')
+                input.push(Math.round(element.score * 15 / 7))
+                input.push('\n')
+            });
+            // console.log(input)
+            // console.log(input.join(''))
+            predict.send(input.join(''));
+            predict.on('message', function (message) {
+                // console.log(message);
+                let result = Array.from(message).map(Number);
+                console.log(result);
+        
+                while(Math.min(...result) != 9) {
+                    let minLevel = Math.min(...result);
+                    let minIndex = result.indexOf(minLevel);
+                    result[minIndex] = 9;
+                    console.log('Current Lowest Level: ' + users[minIndex].userid);
+                    if (Math.min(...result) != 9) {
+                        let opponent = result.indexOf(Math.min(...result));
+                        result[opponent] = 9;
+                        console.log('Current Opponent: ' + users[opponent].userid);
+                        db.editOpponentId(users[minIndex].userid, users[opponent].userid);
+                        db.editOpponentId(users[opponent].userid, users[minIndex].userid);
+                    }
+                }
+            })
+            predict.end(function (err, code, signal) {
+                if (err) throw err;
+                console.log('The exit code was: ' + code);
+                console.log('The exit signal was: ' + signal);
+                console.log('finished');
+            });
+        });
+
+        db.resetScore();
     },
     null,
     true,
@@ -352,34 +412,34 @@ app.put("/tdl/:taskid", async (req, res) => {
 });
 
 //add new task to the tdl
-app.put("/user/score", async (req,res)=>{
+app.put("/user/score", async (req, res) => {
     verify(req.headers['authorization'])
-    .then((result)=>{
-        info.editScore(result.userid, req.body.score).then(response =>{
-            if(response==404) res.status(404).send("User not found")
-            else{
-                leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
-                    res.status(200).send("Score edited successfully\n")
-                })
-            }
-        }).catch(err =>{
-            res.status(400).send(err)
+        .then((result) => {
+            info.editScore(result.userid, req.body.score).then(response => {
+                if (response == 404) res.status(404).send("User not found")
+                else {
+                    leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
+                        res.status(200).send("Score edited successfully\n")
+                    })
+                }
+            }).catch(err => {
+                res.status(400).send(err)
+            })
         })
-    })
-    .catch(console.error);
+        .catch(console.error);
 });
 
 //add new task to the tdl
-app.put("/allboards", async (req,res)=>{
+app.put("/allboards", async (req, res) => {
     verify(req.headers['authorization'])
-    .then((result)=>{
-        leaderboard.updateAllBoard(req.body.users).then(response =>{
-            res.status(200).send("Score edited successfully\n")
-        }).catch(err =>{
-            res.status(400).send(err)
+        .then((result) => {
+            leaderboard.updateAllBoard(req.body.users).then(response => {
+                res.status(200).send("Score edited successfully\n")
+            }).catch(err => {
+                res.status(400).send(err)
+            })
         })
-    })
-    .catch(console.error);
+        .catch(console.error);
 });
 
 //edit user status
@@ -473,17 +533,17 @@ app.delete("/tdl/:taskid", async (req, res) => {
 });
 
 //add new location
-app.post("/friend/:email", async (req,res)=>{
-        verify(req.headers['authorization'])
-        .then((result)=>{
-            friend.addFriend(result.userid,req.params['email'],req.body.name,req.body.friendId).then(response =>{
-                if(response==404) res.status(404).send("User not found\n")
-                else if(response==201) res.status(201).send("already friend\n")
-                else{
-                    Promise.all([leaderboard.addToFriendBoard(result.userid,req.body.friendId),leaderboard.addToFriendBoard(req.body.friendId,result.userid)])
-                    .then(response=>{
-                        res.status(200).send("Friend added successfully\n")
-                    })
+app.post("/friend/:email", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            friend.addFriend(result.userid, req.params['email'], req.body.name, req.body.friendId).then(response => {
+                if (response == 404) res.status(404).send("User not found\n")
+                else if (response == 201) res.status(201).send("already friend\n")
+                else {
+                    Promise.all([leaderboard.addToFriendBoard(result.userid, req.body.friendId), leaderboard.addToFriendBoard(req.body.friendId, result.userid)])
+                        .then(response => {
+                            res.status(200).send("Friend added successfully\n")
+                        })
                 }
             }).catch(err => {
                 res.status(400).send(err)
@@ -519,19 +579,19 @@ app.get("/friend/:email", async (req, res) => {
         .catch(console.error);
 });
 
-app.delete("/friend/:email", async (req,res)=>{
-        verify(req.headers['authorization'])
-        .then((result)=>{
-            friend.deleteFriend(result.userid,req.params['email']).then(response =>{
-                if(response==404) res.status(response).send("User not found\n") 
-                else if(response==405) res.status(response).send("Friend not exist\n")
-                else{
-                    Promise.all([leaderboard.removeFromFriendBoard(result.userid,response.friendId),leaderboard.removeFromFriendBoard(response.friendId,result.userid)])
-                    .then(response=>{
-                        res.status(200).send("Friend deleted successfully\n")
-                    })
+app.delete("/friend/:email", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            friend.deleteFriend(result.userid, req.params['email']).then(response => {
+                if (response == 404) res.status(response).send("User not found\n")
+                else if (response == 405) res.status(response).send("Friend not exist\n")
+                else {
+                    Promise.all([leaderboard.removeFromFriendBoard(result.userid, response.friendId), leaderboard.removeFromFriendBoard(response.friendId, result.userid)])
+                        .then(response => {
+                            res.status(200).send("Friend deleted successfully\n")
+                        })
                 }
-            }).catch(err =>{
+            }).catch(err => {
                 res.status(400).send(err)
             })
         })
