@@ -93,6 +93,22 @@ Database.prototype.getUser = function(userid){
     )
 }
 
+Database.prototype.getOpponent = function(userid){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.collection(userid)
+                .findOne({_id:"userinfo"})
+                .then((result) => {
+                    db.collection(result.opponentid)
+                    .findOne({_id:"userinfo"})
+                    .then((result) => {
+                        resolve({'name':result.name,"score":result.score})
+                    }, (err) => { reject(err); });
+                }, (err) => { reject(err); });
+        })
+    )
+}
+
 Database.prototype.getAllUsers = function(){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {

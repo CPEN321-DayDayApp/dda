@@ -150,6 +150,18 @@ app.get("/rank/friend", async (req, res) => {
         .catch(console.error);
 });
 
+app.get("/opponent", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            db.getOpponent(result.userid).then(result => {
+                res.status(200).send(JSON.stringify(result))
+            }).catch(err => {
+                res.status(400).send(err)
+            })
+        })
+        .catch(console.error);
+});
+
 app.get("/matchmaking", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
