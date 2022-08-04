@@ -18,7 +18,9 @@ function LeaderBoard(db){
                     .then((result) => { 
                         db.collection("globalboard").insertOne({'_id': userid, name, score,"rank":num})
                         .then((result) => { 
-                            resolve(result);
+                            this.scoreUpdateHelper("globalboard").then(values=>{
+                                resolve(result)
+                            })
                         }, (err) => { reject(err); })
                     }, (err) => { reject(err); })
                 })
