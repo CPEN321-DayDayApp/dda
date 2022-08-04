@@ -82,8 +82,8 @@ public class GlobalTab extends Fragment {
                                     LBModel rank = new LBModel();
                                     user = (JSONObject) globalLB.get(i);
                                     rank.setName(user.get("name").toString());
-                                    rank.setRank((Integer) user.get("globalrank"));
-                                    Log.d(TAG, user.get("name").toString());
+                                    rank.setRank((Integer) user.get("rank"));
+                                    rank.setScore((Integer) user.get("score"));
                                     globalRankList.add(rank);
                                 }
                                 lBAdapter.setRank(globalRankList);

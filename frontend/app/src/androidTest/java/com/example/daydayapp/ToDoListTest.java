@@ -53,16 +53,16 @@ public class ToDoListTest {
         onView(withId(R.id.newTaskPopup_title)).check(matches(isDisplayed()));
         onView(withId(R.id.newTaskPopup_title)).check(matches(withText("")));
 
-        //check if select date is in the popup window and is pre-selected current date
+        // Check if select date is in the popup window and is pre-selected current date
         onView(withId(R.id.newTaskPopup_select_date_button)).check(matches(isDisplayed()));
         Calendar cal = Calendar.getInstance();
         onView(withId(R.id.newTaskPopup_select_date_button)).check(matches(withText(makeDateString(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)))));
 
-        //check if set task duration is in the popup window and is pre-selected 15min
+        // Check if set task duration is in the popup window and is pre-selected 15 min
         onView(withId(R.id.newTaskPopup_select_duration_button)).check(matches(isDisplayed()));
         onView(withId(R.id.newTaskPopup_select_duration_button)).check(matches(withText("15")));
 
-        //check if "CANCEL" and "SAVE" button is displayed
+        // Check if "CANCEL" and "SAVE" button is displayed
         onView(withId(R.id.newTaskPopup_cancelButton)).check(matches(isDisplayed()));
         onView(withId(R.id.newTaskPopup_saveButton)).check(matches(isDisplayed()));
     }
@@ -71,7 +71,7 @@ public class ToDoListTest {
     public void clickCancelNewTaskButton() throws InterruptedException {
         clickAddTaskButton();
         onView(withId(R.id.newTaskPopup_cancelButton)).perform(new MyAction("click"));
-        //check if dialog dismissed
+        // Check if dialog dismissed
         onView(withId(R.id.addTaskTextView)).check(doesNotExist());
     }
 
@@ -79,7 +79,7 @@ public class ToDoListTest {
     public void addTaskWithoutTitle() throws InterruptedException {
         clickAddTaskButton();
 
-        //click "SAVE" button directly without filling task name
+        // Click "SAVE" button directly without filling task name
         onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
         // Check if the toast message is displayed correctly
         onView(withText("Please fill all the fields")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
@@ -89,9 +89,9 @@ public class ToDoListTest {
     public void addTaskWithAllSpaceTitle() throws InterruptedException {
         clickAddTaskButton();
 
-        //add title with only white spaces
+        // Add title with only white spaces
         onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "    "));
-        //click "SAVE" button
+        // Click "SAVE" button
         onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
         // Check if the toast message is displayed correctly
         onView(withText("Please fill all the fields")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
@@ -101,13 +101,12 @@ public class ToDoListTest {
     public void addValidTaskThenEditThenDelete() throws InterruptedException {
         /* Add valid task */
         clickAddTaskButton();
-
-        // fill in the task description
+        // Fill in the task description
         onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "test task 0"));
         onView(withId(R.id.newTaskPopup_select_date_button)).perform(new MyAction("fill", "AUG 15 2022"));
         onView(withId(R.id.newTaskPopup_select_duration_button)).perform(new MyAction("fill", "45"));
         onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
-        //check if task added
+        // Check if task added
         Thread.sleep(1000);
         onView(withId(R.id.listRecyclerView)).check(matches(hasDescendant(withText("test task 0"))));
 

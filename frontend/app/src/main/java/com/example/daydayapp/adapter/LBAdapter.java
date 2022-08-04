@@ -36,6 +36,7 @@ public class LBAdapter extends RecyclerView.Adapter<LBAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         LBModel item = LBList.get(position);
         holder.name.setText(item.getName());
+        holder.score.setText(String.valueOf(item.getScore()));
         holder.rank.setText(String.valueOf(item.getRank()));
         switch(item.getRank()) {
             case 1:
@@ -72,11 +73,13 @@ public class LBAdapter extends RecyclerView.Adapter<LBAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
+        TextView score;
         MaterialButton rank;
         CardView LB;
         ViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.friendLB_name);
+            score = view.findViewById(R.id.friendLB_score);
             rank = view.findViewById(R.id.rank_button);
             LB = view.findViewById(R.id.friendLB);
         }

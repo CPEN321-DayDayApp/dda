@@ -69,7 +69,7 @@ public class FriendsTab extends Fragment {
             @Override
             public void run() {
                 //TODO: change url
-                final String url = "http://13.89.36.134:8000/leaderboard/global";
+                final String url = "http://13.89.36.134:8000/leaderboard/friend";
                 HashMap<String, String> content = new HashMap<>();
                 JSONObject jsonContent = new JSONObject(content);
                 JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, jsonContent,
@@ -77,15 +77,15 @@ public class FriendsTab extends Fragment {
                             Log.d(TAG, "Successful");
                             try {
                                 //TODO: change get
-                                JSONArray friendsLB = (JSONArray) response.get("globalboard");
+                                JSONArray friendsLB = (JSONArray) response.get("friendboard");
                                 JSONObject user;
                                 friendRankList.clear();
                                 for (int i = 0; i < friendsLB.length(); i++) {
                                     LBModel rank = new LBModel();
                                     user = (JSONObject) friendsLB.get(i);
                                     rank.setName(user.get("name").toString());
-                                    rank.setRank((Integer) user.get("globalrank"));
-                                    Log.d(TAG, user.get("name").toString());
+                                    rank.setRank((Integer) user.get("rank"));
+                                    rank.setScore((Integer) user.get("score"));
                                     friendRankList.add(rank);
                                 }
                                 lBAdapter.setRank(friendRankList);
