@@ -35,6 +35,7 @@ const friend = new Friend(user)
 const info = new Info(user)
 const leaderboard = new LeaderBoard(db2)
 const predict = new PythonShell('ml/predict.py');
+const retrain = new PythonShell('ml/retrain.py');
 
 async function verify(token) {
     const ticket = await client.verifyIdToken({
@@ -69,8 +70,18 @@ var newWeek = new CronJob(
         leaderboard.getGlobalBoard().then(result => {
             result.globalboard.forEach(element => element['modified'] = 0);
             let gb = result.globalboard;
+            let retrainInput = [];
             db.getAllUsers().then(users => {
                 users.forEach(user => {
+                    retrainInput.push(user.age)
+                    retrainInput.push(',')
+                    if (user.gender == 'male') retrainInput.push(0)
+                    else retrainInput.push(1)
+                    retrainInput.push(',')
+                    retrainInput.push(Math.round(user.score * 15 / 7))
+                    retrainInput.push(',')
+                    retrainInput.push(Math.round(user.score))
+                    retrainInput.push('\n')
                     let findUser = gb.filter(obj => {
                         return obj._id == user.userid
                     });
@@ -140,6 +151,16 @@ var newWeek = new CronJob(
                         })
                     }
                 })
+                retrain.send(retrainInput.join(''));
+                retrain.on('message', function (message) {
+                    console.log(message);
+                })
+                retrain.end(function (err, code, signal) {
+                    if (err) throw err;
+                    console.log('The exit code was: ' + code);
+                    console.log('The exit signal was: ' + signal);
+                    console.log('finished');
+                });
             }).catch(err => {
                 console.log(err)
             })
