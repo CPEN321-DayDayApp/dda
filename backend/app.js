@@ -206,7 +206,7 @@ app.get("/location", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.getLocation(result.userid).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result == 404) res.status(404).send(JSON.stringify({"location": []}))
                 else res.status(200).send(JSON.stringify(result))
             }).catch(err => {
                 res.status(400).send(err)
@@ -219,7 +219,7 @@ app.get("/leaderboard/global", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             leaderboard.getGlobalBoard().then(result => {
-                if (result == 201) res.status(201).send("No Player")
+                if (result == 201) res.status(201).send(JSON.stringify({"globalboard": []}))
                 else res.status(200).send(JSON.stringify(result))
             }).catch(err => {
                 res.status(400).send(err)
@@ -244,7 +244,7 @@ app.get("/leaderboard/friend", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             leaderboard.getFriendBoard(result.userid).then(result => {
-                if (result == 201) res.status(201).send("No Player")
+                if (result == 201) res.status(201).send(JSON.stringify({"friendboard": []}))
                 else res.status(200).send(JSON.stringify(result))
             }).catch(err => {
                 res.status(400).send(err)
@@ -444,7 +444,7 @@ app.get('/tdl', (req, res) => {
         .then((result) => {
             tdl.getTDL(result.userid).then(result => {
                 if (result == 404) res.status(404).send("User not exist");
-                else if (result == 201) res.status(201).send("Empty TDL");
+                else if (result == 201) res.status(201).send(JSON.stringify({"tasklist": []}));
                 else res.status(200).send(JSON.stringify({
                     "tasklist": result
                 }));
@@ -497,7 +497,7 @@ app.get("/friend", async (req, res) => {
         .then((result) => {
             friend.getFriendList(result.userid).then(result => {
                 if (result == 404) res.status(404).send("User not exist")
-                else if (result == 201) res.status(201).send("No friend")
+                else if (result == 201) res.status(201).send(JSON.stringify({"friendlist": []}))
                 else res.status(200).send(JSON.stringify(result))
             }).catch(err => {
                 res.status(400).send(err)
