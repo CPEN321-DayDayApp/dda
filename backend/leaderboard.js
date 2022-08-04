@@ -191,7 +191,7 @@ function LeaderBoard(db){
                             sortBy: { score: -1 },
                             output: {
                                 rank: {
-                                    $denseRank: {}
+                                    $rank: {}
                                 }
                             },
                         }
