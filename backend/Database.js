@@ -357,7 +357,7 @@ Database.prototype.editGender = function(userid, gender){
             db.collection(userid)
                 .updateOne(
                     { _id: "userinfo" },
-                    { $set: {gender}, $set:{"flag":true} }
+                    { $set: {gender,"flag":true} }
                 )
                 .then((result) => { resolve(result); }, (err) => { reject(err); });
         })
@@ -370,7 +370,7 @@ Database.prototype.editAge = function(userid, age){
             db.collection(userid)
                 .updateOne(
                     { _id: "userinfo" },
-                    { $set: {age}, $set:{"flag":true} }
+                    { $set: {age, "flag":true}, }
                 )
                 .then((result) => { resolve(result); }, (err) => { reject(err); });
         })
