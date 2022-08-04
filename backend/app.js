@@ -290,6 +290,19 @@ app.put("/user/score", async (req,res)=>{
     .catch(console.error);
 });
 
+//add new task to the tdl
+app.put("/allboards", async (req,res)=>{
+    verify(req.headers['authorization'])
+    .then((result)=>{
+        leaderboard.updateAllBoard(req.body.users).then(response =>{
+            res.status(200).send("Score edited successfully\n")
+        }).catch(err =>{
+            res.status(400).send(err)
+        })
+    })
+    .catch(console.error);
+});
+
 //edit user status
 app.put("/user/gender", async (req, res) => {
     verify(req.headers['authorization'])

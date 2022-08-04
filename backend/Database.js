@@ -384,6 +384,21 @@ Database.prototype.increaseAge = function(){
     )
 }
 
+Database.prototype.resetScore = function(){
+    return this.connected.then(db =>
+        db.listCollections().toArray(function(err, collinfos) {
+            if(err) reject(err);
+            collinfos.forEach(collinfo => {
+                db.collection(collinfo['name'])
+                    .updateOne(
+                        { _id: "userinfo" },
+                        { $set: {score: 0} }
+                    )
+            })
+        })
+    )
+}
+
 Database.prototype.editStatus = function(userid, status){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
