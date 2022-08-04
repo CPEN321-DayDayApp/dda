@@ -22,6 +22,7 @@ const client = new OAuth2Client(CLIENT_ID1);
 const DB_URL = "mongodb://localhost:27017";
 const DB_NAME = "data"
 const DB_NAME2 = "leaderboard"
+const ELO_CONSTANT = 32;
 
 const app = express();
 const db = new Database(DB_URL, DB_NAME)
@@ -58,11 +59,24 @@ var newWeek = new CronJob(
     '59 59 23 * * 0',
     function () {
         console.log('You will see this message every Sunday at 23:59:59');
-        // get userid, age, gender, study time from database
-        // db.getAllUser().then(users => {
-        //     predict.send(users);
-        //     predict.on('message', function (message) {
 
+        //compute all competition results and update scores
+        
+
+        // db.getAllUsers().then(users => {
+        //     let input = [];
+        //     users.forEach(element => {
+        //         input.push(element.age)
+        //         input.push(',')
+        //         if (element.gender == 'male') input.push(0)
+        //         else input.push(1)
+        //         input.push(',')
+        //         input.push(element.score)
+        //         input.push('\n')
+        //     });
+        //     predict.send(input.join(''));
+        //     predict.on('message', function (message) {
+        //         console.log(message);
         //     })
         //     predict.end(function (err, code, signal) {
         //         if (err) throw err;
