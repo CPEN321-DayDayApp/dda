@@ -101,8 +101,8 @@ Database.prototype.getOpponent = function(userid){
                 .then((result) => {
                     db.collection(result.opponentid)
                     .findOne({_id:"userinfo"})
-                    .then((result) => {
-                        resolve({'name':result.name,"score":result.score})
+                    .then((response) => {
+                        resolve({'id':result.opponentid,'name':response.name,"score":response.score})
                     }, (err) => { reject(err); });
                 }, (err) => { reject(err); });
         })
