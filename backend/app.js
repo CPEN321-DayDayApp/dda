@@ -148,28 +148,49 @@ var newWeek = new CronJob(
         })
 
 
-        // db.getAllUsers().then(users => {
-        //     let input = [];
-        //     users.forEach(element => {
-        //         input.push(element.age)
-        //         input.push(',')
-        //         if (element.gender == 'male') input.push(0)
-        //         else input.push(1)
-        //         input.push(',')
-        //         input.push(int(int(element.score) * 15 / 7))
-        //         input.push('\n')
-        //     });
-        //     predict.send(input.join(''));
-        //     predict.on('message', function (message) {
-        //         console.log(message);
-        //     })
-        //     predict.end(function (err, code, signal) {
-        //         if (err) throw err;
-        //         console.log('The exit code was: ' + code);
-        //         console.log('The exit signal was: ' + signal);
-        //         console.log('finished');
-        //     });
-        // });
+        db.getAllUsers().then(users => {
+            console.log(users)
+            let input = [];
+            users.forEach(element => {
+                input.push(element.age)
+                input.push(',')
+                if (element.gender == 'male') input.push(0)
+                else input.push(1)
+                input.push(',')
+                input.push(Math.round(element.score * 15 / 7))
+                input.push('\n')
+            });
+            // console.log(input)
+            // console.log(input.join(''))
+            predict.send(input.join(''));
+            predict.on('message', function (message) {
+                // console.log(message);
+                let result = Array.from(message).map(Number);
+                console.log(result);
+        
+                while(Math.min(...result) != 9) {
+                    let minLevel = Math.min(...result);
+                    let minIndex = result.indexOf(minLevel);
+                    result[minIndex] = 9;
+                    console.log('Current Lowest Level: ' + users[minIndex].userid);
+                    if (Math.min(...result) != 9) {
+                        let opponent = result.indexOf(Math.min(...result));
+                        result[opponent] = 9;
+                        console.log('Current Opponent: ' + users[opponent].userid);
+                        db.editOpponentId(users[minIndex].userid, users[opponent].userid);
+                        db.editOpponentId(users[opponent].userid, users[minIndex].userid);
+                    }
+                }
+            })
+            predict.end(function (err, code, signal) {
+                if (err) throw err;
+                console.log('The exit code was: ' + code);
+                console.log('The exit signal was: ' + signal);
+                console.log('finished');
+            });
+        });
+
+        db.resetScore();
     },
     null,
     true,
