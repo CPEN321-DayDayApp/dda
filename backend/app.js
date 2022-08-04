@@ -265,9 +265,9 @@ app.put("/user/score", async (req,res)=>{
         info.editScore(result.userid, req.body.score).then(response =>{
             if(response==404) res.status(404).send("User not found")
             else{
-                leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
+                //leaderboard.scoreUpdate(result.userid, req.body.score).then(result => {
                     res.status(200).send("Score edited successfully\n")
-                })
+                //})
             }
         }).catch(err =>{
             res.status(400).send(err)
@@ -275,6 +275,7 @@ app.put("/user/score", async (req,res)=>{
     })
     .catch(console.error);
 });
+
 
 //edit user status
 app.put("/user/gender", async (req, res) => {
