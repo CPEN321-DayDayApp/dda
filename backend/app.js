@@ -62,6 +62,73 @@ var newWeek = new CronJob(
 
         //compute all competition results and update scores
         
+        let updatedScore = [];
+
+        leaderboard.getGlobalBoard().then(result => {
+            result.globalboard.forEach(element => element['modified'] = 0);
+            let gb = result.globalboard;
+            db.getAllUsers().then(users => {
+                users.forEach(user => {
+                    let findUser = gb.filter(obj => {
+                        return obj._id == user.userid
+                    });
+                    if (findUser.length != 0 && findUser[0].modified == 0) {
+                        let currUser = user;
+                        let rankScore1 = gb.filter(obj => {
+                            return obj._id == user.userid
+                        })[0].score;
+                        let score1 = currUser.score;
+                        db.getOpponent(currUser.userid).then(opponent => {
+                            let findOpponent = gb.filter(obj => {
+                                return obj._id == opponent.id
+                            });
+                            if (findOpponent.length != 0 && findOpponent[0].modified == 0) {
+                                let currOpponent = opponent;
+                                let rankScore2 = gb.filter(obj => {
+                                    return obj._id == currOpponent.id
+                                })[0].score;
+                                let score2 = currOpponent.score;
+                                let win = 0;
+                                if (score1 > score2) win = 1;
+                                if (score1 != score2) {
+                                    let p1 = rankScore1 / (rankScore1 + rankScore2);
+                                    let p2 = rankScore2 / (rankScore1 + rankScore2);
+                                    rankScore1 = rankScore1 + ELO_CONSTANT * (win - p1);
+                                    rankScore2 = rankScore2 + ELO_CONSTANT * (1 - win - p2);
+                                    for (let i = 0; i < gb.length; i++) {
+                                        if (gb[i]._id == currUser.userid) {
+                                            gb[i].score = rankScore1;
+                                            gb[i].modified = 1;
+                                        } else if (gb[i]._id == currOpponent.id) {
+                                            gb[i].score = rankScore2;
+                                            gb[i].modified = 1;
+                                        }
+                                    }
+                                    updatedScore.push({"userid": currUser.userid, "score": rankScore1});
+                                    updatedScore.push({"userid": currOpponent.id, "score": rankScore2});
+                                } else {
+                                    for (let i = 0; i < gb.length; i++) {
+                                        if (gb[i]._id == currUser.userid) {
+                                            gb[i].modified = 1;
+                                        } else if (gb[i]._id == currOpponent.id) {
+                                            gb[i].modified = 1;
+                                        }
+                                    }
+                                    updatedScore.push({"userid": currUser.userid, "score": rankScore1});
+                                    updatedScore.push({"userid": currOpponent.id, "score": rankScore2});
+                                }
+                                console.log(updatedScore)
+                                // leaderboard.scoreUpdate(updatedScore).then(result => {
+                                //     console.log(result)
+                                // });
+                                updatedScore = [];
+                            }
+                        })
+                    }
+                })
+            })
+        })
+        
 
         // db.getAllUsers().then(users => {
         //     let input = [];
@@ -71,7 +138,7 @@ var newWeek = new CronJob(
         //         if (element.gender == 'male') input.push(0)
         //         else input.push(1)
         //         input.push(',')
-        //         input.push(element.score)
+        //         input.push(int(int(element.score) * 15 / 7))
         //         input.push('\n')
         //     });
         //     predict.send(input.join(''));
