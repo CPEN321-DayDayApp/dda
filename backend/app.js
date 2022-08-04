@@ -295,6 +295,18 @@ app.get("/opponent", async (req, res) => {
         .catch(console.error);
 });
 
+app.get("/user/flag", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            db.getFlag(result.userid).then(result => {
+                res.status(200).send(JSON.stringify(result))
+            }).catch(err => {
+                res.status(400).send(err)
+            })
+        })
+        .catch(console.error);
+});
+
 //add new location
 app.post("/location", async (req, res) => {
     verify(req.headers['authorization'])

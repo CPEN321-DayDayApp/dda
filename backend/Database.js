@@ -75,7 +75,7 @@ Database.prototype.addUser = function(userid, email, name, token){
                        resolve("user already exists")
                    }
                 })
-                db.collection(userid).insertOne({'_id': "userinfo", token, email, name,'age':25,'gender':"male",'score':0,'status': false, 'opponentid':'0', 'location':[], 'friendlist': []})
+                db.collection(userid).insertOne({'_id': "userinfo", token, email, name,'age':25,'gender':"male",'score':0,'status': false,'flag': false,'opponentid':'0', 'location':[], 'friendlist': []})
                 .then((result) => { resolve(result); }, (err) => { reject(err); })
             })
             
@@ -209,6 +209,15 @@ return this.connected.then(db =>
         .then((result) => { resolve({"location":result.location});}, (err) => { reject(err); });
     })
     )
+}
+
+Database.prototype.getFlag = function(userid){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.collection(userid).findOne({ _id: "userinfo" })
+            .then((result) => { resolve({"flag":result.flag});}, (err) => { reject(err); });
+        })
+        )
 }
 
 Database.prototype.addTDL = function(userid, _id, lat, lng, task, time, date){
@@ -349,7 +358,7 @@ Database.prototype.editGender = function(userid, gender){
             db.collection(userid)
                 .updateOne(
                     { _id: "userinfo" },
-                    { $set: {gender} }
+                    { $set: {gender}, $set:{"flag":true} }
                 )
                 .then((result) => { resolve(result); }, (err) => { reject(err); });
         })
@@ -362,7 +371,7 @@ Database.prototype.editAge = function(userid, age){
             db.collection(userid)
                 .updateOne(
                     { _id: "userinfo" },
-                    { $set: {age} }
+                    { $set: {age}, $set:{"flag":true} }
                 )
                 .then((result) => { resolve(result); }, (err) => { reject(err); });
         })
