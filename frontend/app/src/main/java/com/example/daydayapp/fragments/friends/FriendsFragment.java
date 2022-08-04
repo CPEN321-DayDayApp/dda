@@ -162,15 +162,19 @@ public class FriendsFragment extends Fragment {
                 final String mRequestBody = jsonContent.toString();
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url, response -> {
                     Log.i(TAG, response);
-                    FriendModel friendtoAdd = new FriendModel();
-                    friendtoAdd.setEmail(email);
-                    //TODO: change status (get the friend's status or server send the status in response)
-                    friendtoAdd.setStatus(FriendStatus.INACTIVE);
-                    friendtoAdd.setName(searchResult);
-                    friendtoAdd.setId(friendId);
-                    friendEmailMap.put(email, friendtoAdd);
-                    searchResult = null;    // Clear search result
-                    friendAdapter.setFriends(new ArrayList<>(friendEmailMap.values()));
+                    if (response.equals("already friend\n"))
+                        Toast.makeText(main, "Check if the friend is already added.", Toast.LENGTH_SHORT).show();
+                    else {
+                        FriendModel friendtoAdd = new FriendModel();
+                        friendtoAdd.setEmail(email);
+                        //TODO: change status (get the friend's status or server send the status in response)
+                        friendtoAdd.setStatus(FriendStatus.INACTIVE);
+                        friendtoAdd.setName(searchResult);
+                        friendtoAdd.setId(friendId);
+                        friendEmailMap.put(email, friendtoAdd);
+                        searchResult = null;    // Clear search result
+                        friendAdapter.setFriends(new ArrayList<>(friendEmailMap.values()));
+                    }
                     dialog.dismiss();
                 }, error -> {
                     Log.e(TAG, error.toString());
