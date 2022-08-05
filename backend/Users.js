@@ -126,7 +126,7 @@ function Users(db) {
     this.getFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.getFriend(userid, email).then(result => {
                         resolve(result)
@@ -139,7 +139,7 @@ function Users(db) {
     this.addFriend = function (userid, email, name, friendId) {
         return new Promise((resolve, reject) => {
             this.friendExist(userid, friendId).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.addFriend(userid, email, name, friendId).then(result => {
                         if (result == "already friend") resolve(1)
@@ -154,7 +154,7 @@ function Users(db) {
     this.deleteFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.deleteFriend(userid, email).then(result => {
                         if (result == "already not friend") resolve(1)
@@ -169,7 +169,7 @@ function Users(db) {
     this.addLocation = function (userid, lat, lng) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.addLocation(userid, lat, lng).then(result => {
                         resolve(result)
@@ -181,7 +181,7 @@ function Users(db) {
     this.getLocation = function (userid) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.getLocation(userid).then(result => {
                         resolve(result)
@@ -193,7 +193,7 @@ function Users(db) {
     this.deleteLocation = function (userid, lat, lng) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.deleteLocation(userid, lat, lng).then(result => {
                         resolve(result)
@@ -205,7 +205,7 @@ function Users(db) {
     this.pn = function (userid, email) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.pn(userid, email).then(result => {
                         if (result == "no such friend") resolve(1)
@@ -220,7 +220,7 @@ function Users(db) {
     this.editScore = function (userid, score) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.editScore(userid, score).then(result => {
                         resolve(result)
@@ -233,7 +233,7 @@ function Users(db) {
     this.editToken = function (userid, token) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.editToken(userid, token).then(result => {
                         resolve(result)
@@ -246,7 +246,7 @@ function Users(db) {
     this.editAge = function (userid, age) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.editAge(userid, age).then(result => {
                         resolve(result)
@@ -259,7 +259,7 @@ function Users(db) {
     this.editGender = function (userid, gender) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.editGender(userid, gender).then(result => {
                         resolve(result)
@@ -272,7 +272,7 @@ function Users(db) {
     this.editStatus = function (userid, status) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.editStatus(userid, status).then(result => {
                         resolve(result)
