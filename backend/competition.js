@@ -148,7 +148,7 @@ function Competition(userdb, leaderdb) {
                                     });
                                 }
                                 console.log(updatedScore)
-                                leaderboard.scoreUpdate(updatedScore).then(result => {
+                                leaderdb.scoreUpdate(updatedScore).then(result => {
                                     console.log(result)
                                 });
                                 updatedScore = [];
