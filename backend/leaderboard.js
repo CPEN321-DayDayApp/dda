@@ -1,33 +1,28 @@
 
 
 function LeaderBoard(db){
-    this.newPlayer = function(userid, name, score){
+    const that=this;
+    this.scoreUpdateHelper= function(collname){
         return db.connected.then(db =>
             new Promise((resolve, reject) => {
-                db.listCollections().toArray(function(err, collinfos) {
-                    if(err) reject(err);
-                    var num=0;
-                    if(collinfos.length==0) num=1
-                    collinfos.forEach(collinfo => {
-                        num++;
-                       if(collinfo['name']==userid){
-                           resolve("user already exists")
-                       }
-                    })
-                    db.collection(userid).insertOne({'_id': userid, name, score,"rank":1})
-                    .then((result) => { 
-                        db.collection("globalboard").insertOne({'_id': userid, name, score,"rank":num})
-                        .then((result) => { 
-                            this.scoreUpdateHelper("globalboard").then(values=>{
-                                resolve(result)
-                            })
-                        }, (err) => { reject(err); })
-                    }, (err) => { reject(err); })
-                })
-                
+                db.collection(collname).aggregate( [
+                    {
+                        $setWindowFields: {
+                            sortBy: { score: -1 },
+                            output: {
+                                rank: {
+                                    $rank: {}
+                                }
+                            },
+                        }
+                    },
+                    { $merge: collname} 
+                ]).toArray()
+                resolve(1)
             })
         )
     }
+    
     this.addToFriendBoard = function(userid, friendid){
            return db.connected.then(db =>
                 new Promise((resolve, reject) => {
@@ -184,26 +179,6 @@ function LeaderBoard(db){
         )
     }
 
-    this.scoreUpdateHelper= function(collname){
-        return db.connected.then(db =>
-            new Promise((resolve, reject) => {
-                db.collection(collname).aggregate( [
-                    {
-                        $setWindowFields: {
-                            sortBy: { score: -1 },
-                            output: {
-                                rank: {
-                                    $rank: {}
-                                }
-                            },
-                        }
-                    },
-                    { $merge: collname} 
-                ]).toArray()
-                resolve(1)
-            })
-        )
-    }
     this.getFriendBoard = function(userid){
         return db.connected.then(db =>
             new Promise((resolve, reject) => {
@@ -264,6 +239,32 @@ function LeaderBoard(db){
             })   
         )
     }
+    this.newPlayer = function(userid, name, score){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                db.listCollections().toArray(function(err, collinfos) {
+                    if(err) reject(err);
+                    var num=0;
+                    if(collinfos.length==0) num=1
+                    collinfos.forEach(collinfo => {
+                        num++;
+                       if(collinfo['name']==userid){
+                           resolve("user already exists")
+                       }
+                    })
+                    Promise.all([db.collection(userid).insertOne({'_id': userid, name, score,"rank":1}), 
+                        db.collection("globalboard").insertOne({'_id': userid, name, score,"rank":num})])
+                        .then((result) => { 
+                            that.updateGlobalBoard().then(values=>{
+                                resolve(result)
+                            })
+                        }, (err) => { reject(err); })
+                })
+                
+            })
+        )
+    }
 }
+
 
 module.exports = LeaderBoard;

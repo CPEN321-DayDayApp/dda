@@ -7,7 +7,7 @@ const {
 // const LeaderBoard = require("./leaderboard")
 
 const predict = new PythonShell('ml/predict.py');
-// const retrain = new PythonShell('ml/retrain.py');
+const retrain = new PythonShell('ml/retrain.py');
 
 // const DB_URL = "mongodb://localhost:27017";
 // const DB_NAME = "data"
@@ -119,7 +119,7 @@ function Competition(userdb, leaderdb) {
                             console.log(updatedScore)
                         }
                         if(num===result[1].length){
-                            this.retrain(retrainInput);
+                            this.retrainModel(retrainInput);
                             leaderdb.updateAllBoard(updatedScore).then(result => {
                                 resolve(result)
                             });
@@ -132,7 +132,7 @@ function Competition(userdb, leaderdb) {
         })
     }
 
-    this.retrain=function(retrainInput){
+    this.retrainModel=function(retrainInput){
         retrain.send(retrainInput.join(''));
         retrain.on('message', function (message) {
             console.log(message);
