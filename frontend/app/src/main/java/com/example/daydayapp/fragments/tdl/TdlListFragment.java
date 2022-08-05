@@ -305,6 +305,7 @@ public class TdlListFragment extends Fragment implements LocationListener {
                 StringRequest deleteLocationRequest = new StringRequest(Request.Method.DELETE, urlDeleteLocation,
                         response -> {
                             tdlFragment.refreshMarker();
+                            tasksAdapter.deleteLocation(tasksAdapter.getCurrentStudyLocation());
                         }, error -> Log.e(TAG, error.toString())) {
                     @Override
                     public String getBodyContentType() {
@@ -347,10 +348,11 @@ public class TdlListFragment extends Fragment implements LocationListener {
                 response -> {
                     Log.d(TAG, "Successful");
                     try {
+                        Thread.sleep(500);
                         JSONArray tdlInfo = (JSONArray) response.get("tasklist");
                         tasksAdapter.setLocationTdl(tdlInfo);
                         tasksAdapter.setTasks();
-                    } catch (JSONException e) {
+                    } catch (JSONException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }, error -> Log.d(TAG, error.toString())) {

@@ -129,7 +129,6 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
             this.currentStudyLocation = new MyLatLng(currentStudyLocation);
             this.todoList = locationTdl.get(this.currentStudyLocation);
         }
-
     }
 
     public boolean isLocationSet(LatLng location) {
@@ -145,10 +144,16 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
 
     public void addLocation(ArrayList<LatLng> locationList) {
         if (locationList != null && locationList.size() > 0) {
-            for (LatLng location : locationList)
-                locationTdl.put(new MyLatLng(location), new ArrayList<>());
+            for (LatLng location : locationList) {
+                if (!locationTdl.containsKey(new MyLatLng(location)))
+                    locationTdl.put(new MyLatLng(location), new ArrayList<>());
+            }
             setCurrentStudyLocation(locationList.get(0));
         }
+    }
+
+    public void deleteLocation(LatLng location) {
+        locationTdl.remove(new MyLatLng(location));
     }
 
     public void addTask(LatLng location, ToDoModel task) {

@@ -287,6 +287,7 @@ public class TdlFragment extends Fragment implements LocationListener {
                         Log.d(TAG, "LocationList: " + locationList.size());
                         tasksAdapter.addLocation(locationList);
                         addMarkers(locationList);
+                        tasksAdapter.setTasks();
                         if (locationList.size() > 0)
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationList.get(0), 15));
                         else

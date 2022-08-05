@@ -51,10 +51,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         holder.status.setText(item.getStatus());
         holder.notifyButton.setOnClickListener(v -> {
             if (Objects.equals(item.getStatus(), "STUDYING")) {
-                Toast toast = Toast.makeText(getContext(), "Your friend is studying.\nPlease DO NOT disturb.", Toast.LENGTH_LONG);
-                TextView toastText = toast.getView().findViewById(android.R.id.message);
-                toastText.setGravity(Gravity.CENTER);
-                toast.show();
+                Toast.makeText(getContext(), "Your friend is studying. Please DO NOT disturb.", Toast.LENGTH_LONG).show();
             } else {
                 friendNotification(activity.getAccount().getIdToken(), item.getEmail());
             }

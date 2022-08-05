@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.daydayapp.MainActivity;
@@ -25,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
@@ -176,32 +178,61 @@ public class ProfileFragment extends Fragment {
         // Do not ask age and gender Button
         Button doNotAskButton = view.findViewById(R.id.do_not_ask_button);
         doNotAskButton.setOnClickListener(v -> {
-            final String url = "http://13.89.36.134:8000/user/age";
-            HashMap<String, Integer> content = new HashMap<>();
-            content.put("age", 25);
+            // Check if user is already set age and gender
+            final String url = "http://13.89.36.134:8000/user/flag";
+            HashMap<String, String> content = new HashMap<>();
             JSONObject jsonContent = new JSONObject(content);
-            final String mRequestBody = jsonContent.toString();
-            StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, response -> {
-                Log.i(TAG, response);
-            }, error -> Log.e(TAG, error.toString())) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, jsonContent,
+                    response -> {
+                        Log.d(TAG, "Successful");
+                        try {
+                            boolean flag = (boolean) response.get("flag");
+                            if (!flag) {
+                                final String ageUrl = "http://13.89.36.134:8000/user/age";
+                                HashMap<String, Integer> ageContent = new HashMap<>();
+                                ageContent.put("age", 25);
+                                JSONObject jsonAgeContent = new JSONObject(ageContent);
+                                final String mRequestBody = jsonAgeContent.toString();
+                                StringRequest stringRequest = new StringRequest(Request.Method.PUT, ageUrl, res -> {
+                                    Log.i(TAG, res);
+                                }, error -> Log.e(TAG, error.toString())) {
+                                    @Override
+                                    public String getBodyContentType() {
+                                        return "application/json; charset=utf-8";
+                                    }
 
-                @Override
-                public byte[] getBody() {
-                    return mRequestBody.getBytes(StandardCharsets.UTF_8);
-                }
+                                    @Override
+                                    public byte[] getBody() {
+                                        return mRequestBody.getBytes(StandardCharsets.UTF_8);
+                                    }
 
+                                    @Override
+                                    public Map<String, String> getHeaders() {
+                                        HashMap<String, String> headers = new HashMap<>();
+                                        headers.put("Authorization", main.getAccount().getIdToken());
+                                        return headers;
+                                    }
+                                };
+                                queue.add(stringRequest);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, error -> Log.d(TAG, error.toString())) {
+                /**
+                 * Passing some request headers
+                 * Set API Key
+                 */
                 @Override
                 public Map<String, String> getHeaders() {
                     HashMap<String, String> headers = new HashMap<>();
                     headers.put("Authorization", main.getAccount().getIdToken());
+                    headers.put("Content-Type", "application/json");
                     return headers;
                 }
             };
-            queue.add(stringRequest);
+
+            queue.add(jsonRequest);
         });
 
         return view;

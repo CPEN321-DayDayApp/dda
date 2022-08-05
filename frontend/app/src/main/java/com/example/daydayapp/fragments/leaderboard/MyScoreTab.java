@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.daydayapp.MainActivity;
@@ -37,6 +39,7 @@ public class MyScoreTab extends Fragment {
     private int score;
     private int fullScore;
     private int competeUserScore;
+    private int mStatusCode = 200;
     private String competeUserName;
 
     private ProgressBar scoreBar,
@@ -175,6 +178,7 @@ public class MyScoreTab extends Fragment {
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, jsonContent,
                 response -> {
                     Log.d(TAG, "Successful");
+                    Log.d(TAG, String.valueOf(mStatusCode));
                     try {
                         JSONArray tdl = (JSONArray) response.get("tasklist");
                         fullScore = getFullScore(tdl);
@@ -199,6 +203,14 @@ public class MyScoreTab extends Fragment {
                 headers.put("Authorization", main.getAccount().getIdToken());
                 headers.put("Content-Type", "application/json");
                 return headers;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    mStatusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
             }
         };
 
