@@ -27,7 +27,7 @@ function Competition(userdb, leaderdb) {
         return new Promise((resolve, reject) => {
             userdb.getAllUsers().then(users => {
                 if(users.length != 0){
-                    //console.log(users)
+                    resolve(200)
                     let input = [];
                     users.forEach(element => {
                         input.push(element.age)
@@ -54,11 +54,8 @@ function Competition(userdb, leaderdb) {
                                 let opponent = result.indexOf(Math.min(...result));
                                 result[opponent] = 9;
                                 console.log('Current Opponent: ' + users[opponent].userid);
-                                Promise.all([userdb.editOpponentId(users[minIndex].userid, users[opponent].userid),
-                                userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)]).then(values=>{
-                                    if(Math.min(...result) == 9) resolve(200);
-
-                                })   
+                                userdb.editOpponentId(users[minIndex].userid, users[opponent].userid)
+                                userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)  
                             }
                         }
                     })

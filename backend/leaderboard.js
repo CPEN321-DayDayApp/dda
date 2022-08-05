@@ -169,7 +169,10 @@ function LeaderBoard(db){
     this.updateAllBoard= function(users){
         return db.connected.then(db =>
             new Promise((resolve, reject) => {
-                this.scoreUpdate(users).then(result=>{
+                if (users.length === 0)
+                    resolve(200)
+                else
+                    this.scoreUpdate(users).then(result=>{
                     Promise.all([this.updateFriendBoard(users),this.updateGlobalBoard()])
                     .then(values=>{
                         resolve(200)
