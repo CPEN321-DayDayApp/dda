@@ -70,6 +70,7 @@ function Competition(userdb, leaderdb) {
                         console.log('The exit signal was: ' + signal);
                     });
                 }
+                else resolve(200)
             });
         })
     }
