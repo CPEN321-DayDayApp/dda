@@ -131,9 +131,12 @@ app.get("/location", async (req, res) => {
 app.post("/competition", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
-            Promise.all([competition.settleMatch(),competition.assignNewOpponent()]).then(values=>{
-                db.resetScore();
-                res.status(200).send("For Test")
+            competition.settleMatch().then(values=>{
+                competition.assignNewOpponent().then(values=>{
+                    db.resetScore().then(result=>{
+                        res.status(200).send("Test successfully\n")
+                    })
+                })
             })
         })
         .catch(console.error);
