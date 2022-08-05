@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.daydayapp.MainActivity;
-import com.example.daydayapp.model.LBModel;
 import com.example.daydayapp.R;
+import com.example.daydayapp.model.LBModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;

@@ -9,22 +9,16 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import android.content.Context;
+import static com.example.daydayapp.GoogleMapTestHelper.findMarkerAndClick;
+import static org.hamcrest.Matchers.not;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-
-import static com.example.daydayapp.GoogleMapTestHelper.findMarkerAndClick;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
 
 import java.util.Calendar;
 

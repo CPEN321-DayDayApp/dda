@@ -3,12 +3,10 @@ package com.example.daydayapp;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers;
-
-import androidx.appcompat.widget.SearchView;
 
 import org.hamcrest.Matcher;
 

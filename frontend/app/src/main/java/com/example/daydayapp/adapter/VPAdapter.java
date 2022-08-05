@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.daydayapp.MainActivity;
 import com.example.daydayapp.fragments.leaderboard.FriendsTab;
 import com.example.daydayapp.fragments.leaderboard.GlobalTab;
 import com.example.daydayapp.fragments.leaderboard.LeaderboardFragment;
 import com.example.daydayapp.fragments.leaderboard.MyScoreTab;
-import com.example.daydayapp.MainActivity;
 
 public class VPAdapter extends FragmentStateAdapter {
 

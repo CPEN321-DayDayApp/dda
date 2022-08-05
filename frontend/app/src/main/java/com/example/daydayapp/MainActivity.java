@@ -1,12 +1,5 @@
 package com.example.daydayapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,10 +11,15 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -30,7 +28,6 @@ import com.example.daydayapp.fragments.leaderboard.LeaderboardFragment;
 import com.example.daydayapp.fragments.leaderboard.MyScoreTab;
 import com.example.daydayapp.fragments.profile.ProfileFragment;
 import com.example.daydayapp.fragments.tdl.TdlFragment;
-import com.example.daydayapp.fragments.tdl.TdlListFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -40,7 +37,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

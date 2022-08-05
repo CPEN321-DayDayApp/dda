@@ -11,11 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.daydayapp.fragments.tdl.MyLatLng;
 import com.example.daydayapp.MainActivity;
-import com.example.daydayapp.model.ToDoModel;
 import com.example.daydayapp.R;
+import com.example.daydayapp.fragments.tdl.MyLatLng;
 import com.example.daydayapp.fragments.tdl.TdlListFragment;
+import com.example.daydayapp.model.ToDoModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;

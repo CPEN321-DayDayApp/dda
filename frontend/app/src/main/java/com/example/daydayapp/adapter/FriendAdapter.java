@@ -2,7 +2,6 @@ package com.example.daydayapp.adapter;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.daydayapp.MainActivity;
-import com.example.daydayapp.model.FriendModel;
 import com.example.daydayapp.R;
+import com.example.daydayapp.model.FriendModel;
 
 import org.json.JSONObject;
 
