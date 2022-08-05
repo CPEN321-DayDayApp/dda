@@ -7,7 +7,7 @@ const {
 // const LeaderBoard = require("./leaderboard")
 
 const predict = new PythonShell('ml/predict.py');
-const retrain = new PythonShell('ml/retrain.py');
+// const retrain = new PythonShell('ml/retrain.py');
 
 // const DB_URL = "mongodb://localhost:27017";
 // const DB_NAME = "data"
@@ -85,7 +85,10 @@ function Competition(userdb, leaderdb) {
                     retrainInput.push(',')
                     retrainInput.push(Math.round(user.score * SCORE_CONSTANT / 7))
                     retrainInput.push(',')
-                    retrainInput.push(Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT)))
+                    let tmp = Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT));
+                    if (tmp > LEVEL_RANGE) tmp = LEVEL_RANGE;
+                    if (tmp < 0) tmp = 0;
+                    retrainInput.push(tmp)
                     retrainInput.push('\n')
                     let findUser = gb.filter(obj => {
                         return obj._id == user.userid
@@ -111,8 +114,8 @@ function Competition(userdb, leaderdb) {
                                 if (score1 != score2) {
                                     let p1 = rankScore1 / (rankScore1 + rankScore2);
                                     let p2 = rankScore2 / (rankScore1 + rankScore2);
-                                    rankScore1 = rankScore1 + ELO_CONSTANT * (win - p1);
-                                    rankScore2 = rankScore2 + ELO_CONSTANT * (1 - win - p2);
+                                    rankScore1 = Math.round(rankScore1 + ELO_CONSTANT * (win - p1));
+                                    rankScore2 = Math.round(rankScore2 + ELO_CONSTANT * (1 - win - p2));
                                     for (let i = 0; i < gb.length; i++) {
                                         if (gb[i]._id == currUser.userid) {
                                             gb[i].score = rankScore1;
