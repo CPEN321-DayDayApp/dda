@@ -25,6 +25,9 @@ const DB_URL = "mongodb://localhost:27017";
 const DB_NAME = "data"
 const DB_NAME2 = "leaderboard"
 const ELO_CONSTANT = 32;
+const DAILY_LIMIT = 720;
+const SCORE_CONSTANT = 15;
+const LEVEL_RANGE = 5;
 
 const app = express();
 const db = new Database(DB_URL, DB_NAME)
@@ -78,9 +81,9 @@ var newWeek = new CronJob(
                     if (user.gender == 'male') retrainInput.push(0)
                     else retrainInput.push(1)
                     retrainInput.push(',')
-                    retrainInput.push(Math.round(user.score * 15 / 7))
+                    retrainInput.push(Math.round(user.score * SCORE_CONSTANT / 7))
                     retrainInput.push(',')
-                    retrainInput.push(Math.round(user.score))
+                    retrainInput.push(Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT)))
                     retrainInput.push('\n')
                     let findUser = gb.filter(obj => {
                         return obj._id == user.userid
