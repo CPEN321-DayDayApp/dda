@@ -17,7 +17,7 @@ function Friend(user) {
 
     this.getFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
+            if (!isNaN(userid) && typeof (userid) != "number" && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
                 user.getFriend(userid, email).then(result => {
                     if (result === 0) resolve(404)
                     else resolve(result)
@@ -31,7 +31,7 @@ function Friend(user) {
 
     this.addFriend = function (userid, email, name, friendId) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && !isNaN(friendId) && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
+            if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(friendId) && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
                 user.addFriend(userid, email, name, friendId).then(result => {
                     if (result === 0) resolve(404)
                     else if (result === 1) resolve(201)

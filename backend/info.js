@@ -2,7 +2,7 @@
 function Info(user) {
     this.addLocation = function (userid, lat, lng) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && !isNaN(lat) && !isNaN(lng)) {
+            if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(lat) && !isNaN(lng)) {
                 user.addLocation(userid, lat, lng).then(result => {
                     if (result === 0) resolve(404)
                     else resolve(200)
@@ -15,7 +15,7 @@ function Info(user) {
     }
     this.getLocation = function (userid) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number) {
+            if (!isNaN(userid) && typeof (userid) != "number") {
                 user.getLocation(userid).then(result => {
                     if (result === 0) resolve(404)
                     else resolve(result)
@@ -28,7 +28,7 @@ function Info(user) {
     }
     this.deleteLocation = function (userid, lat, lng) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && !isNaN(lat) && !isNaN(lng)) {
+            if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(lat) && !isNaN(lng)) {
                 user.deleteLocation(userid, lat, lng).then(result => {
                     if (result === 0) resolve(404)
                     else resolve(200)
@@ -41,7 +41,7 @@ function Info(user) {
     }
     this.pn = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
+            if (!isNaN(userid) && typeof (userid) != "number" && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
                 user.pn(userid, email).then(result => {
                     if (result === 0) resolve(404)
                     else if (result === 1) resolve(405)
@@ -56,7 +56,7 @@ function Info(user) {
     }
     this.editScore = function (userid, score) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && !isNaN(score)) {
+            if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(score)) {
                 user.editScore(userid, score).then(result => {
                     if (result == 0) resolve(404)
                     else resolve(200)
@@ -70,7 +70,7 @@ function Info(user) {
 
     this.editToken = function (userid, token) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number) {
+            if (!isNaN(userid) && typeof (userid) != "number") {
                 user.editToken(userid, token).then(result => {
                     if (result == 0) resolve(404)
                     else resolve(200)
@@ -84,7 +84,7 @@ function Info(user) {
 
     this.editGender = function (userid, gender) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number) {
+            if (!isNaN(userid) && typeof (userid) != "number") {
                 user.editGender(userid, gender).then(result => {
                     if (result == 0) resolve(404)
                     else resolve(200)
@@ -98,7 +98,7 @@ function Info(user) {
 
     this.editAge = function (userid, age) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && !isNaN(age)) {
+            if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(age)) {
                 user.editAge(userid, age).then(result => {
                     if (result == 0) resolve(404)
                     else resolve(200)
@@ -112,7 +112,7 @@ function Info(user) {
 
     this.editStatus = function (userid, status) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && typeof status != Boolean) {
+            if (!isNaN(userid) && typeof (userid) != "number" && typeof status != "boolean") {
                 user.editStatus(userid, status).then(result => {
                     if (result == 0) resolve(404)
                     else resolve(200)
