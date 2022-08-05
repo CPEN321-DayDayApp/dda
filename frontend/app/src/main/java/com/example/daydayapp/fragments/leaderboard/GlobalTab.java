@@ -36,7 +36,6 @@ public class GlobalTab extends Fragment {
     private static final String TAG = "Glb";
     private final MainActivity main;
     private RequestQueue queue;
-    private Timer refreshGlobalLB;
 
     public GlobalTab(MainActivity main) {
         this.main = main;
@@ -63,7 +62,7 @@ public class GlobalTab extends Fragment {
         globalLBListRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         globalLBListRecyclerView.setAdapter(lBAdapter);
 
-        refreshGlobalLB = new Timer();
+        Timer refreshGlobalLB = new Timer();
         refreshGlobalLB.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {

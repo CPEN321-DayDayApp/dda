@@ -36,7 +36,6 @@ public class FriendsTab extends Fragment {
     private static final String TAG = "Flb";
     private final MainActivity main;
     private RequestQueue queue;
-    private Timer refreshFriendsLB;
 
     public FriendsTab(MainActivity main) {
         this.main = main;
@@ -63,7 +62,7 @@ public class FriendsTab extends Fragment {
         friendLBListRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         friendLBListRecyclerView.setAdapter(lBAdapter);
 
-        refreshFriendsLB = new Timer();
+        Timer refreshFriendsLB = new Timer();
         refreshFriendsLB.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
