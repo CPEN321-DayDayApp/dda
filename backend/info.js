@@ -58,7 +58,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(score)) {
                 user.editScore(userid, score).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }
@@ -72,7 +72,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != "number") {
                 user.editToken(userid, token).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }
@@ -86,7 +86,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != "number") {
                 user.editGender(userid, gender).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }
@@ -100,7 +100,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != "number" && !isNaN(age)) {
                 user.editAge(userid, age).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }
@@ -114,7 +114,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != "number" && typeof status != "boolean") {
                 user.editStatus(userid, status).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }

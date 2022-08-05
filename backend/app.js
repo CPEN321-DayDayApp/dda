@@ -318,7 +318,7 @@ app.put("/user/gender", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.editGender(result.userid, req.body.gender).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result === 404) res.status(404).send("User not found")
                 else res.status(200).send("Gender edited successfully\n")
             }).catch(err => {
                 res.status(400).send(err)
@@ -332,7 +332,7 @@ app.put("/user/age", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.editAge(result.userid, req.body.age).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result === 404) res.status(404).send("User not found")
                 else res.status(200).send("Gender edited successfully\n")
             }).catch(err => {
                 res.status(400).send(err)
@@ -346,7 +346,7 @@ app.put("/user/status", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.editStatus(result.userid, req.body.status).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result === 404) res.status(404).send("User not found")
                 else res.status(200).send("Status edited successfully\n")
             }).catch(err => {
                 res.status(400).send(err)
@@ -360,7 +360,7 @@ app.put("/user/token", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.editToken(result.userid, req.body.token).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result === 404) res.status(404).send("User not found")
                 else res.status(200).send("Token edited successfully\n")
             }).catch(err => {
                 res.status(400).send(err)

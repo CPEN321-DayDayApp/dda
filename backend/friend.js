@@ -2,7 +2,7 @@
 function Friend(user) {
     this.getFriendList = function (userid) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number) {
+            if (!isNaN(userid) && typeof (userid) != "number") {
                 user.getFriendList(userid).then(result => {
                     if (result === 0) resolve(404)
                     else if (result === 1) resolve(201)
@@ -45,7 +45,7 @@ function Friend(user) {
     }
     this.deleteFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if (!isNaN(userid) && typeof (userid) != Number && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
+            if (!isNaN(userid) && typeof (userid) != "number" && (/\S[^\s@]*@\S+\.\S+/.test(email))) {
                 user.deleteFriend(userid, email).then(result => {
                     if (result === 0) resolve(404)
                     else if (result === 1) resolve(405)

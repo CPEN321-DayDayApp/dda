@@ -112,6 +112,7 @@ function LeaderBoard(db) {
         return db.connected.then(db =>
             new Promise((resolve, reject) => {
                 db.collection(userid).find({}).toArray((err, result) => {
+                    console.log(err);
                     var num = 0;
                     result.forEach(document => {
                         db.collection(document['_id']).updateOne(

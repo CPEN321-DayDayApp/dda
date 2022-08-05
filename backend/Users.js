@@ -87,7 +87,7 @@ function Users(db) {
     this.deleteTDL = function (userid, taskid) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.deleteTDL(userid, taskid).then(result => {
                         if (result["deletedCount"] === 0) resolve(1)
@@ -100,7 +100,7 @@ function Users(db) {
     this.editTDL = function (userid, id, lat, lng, task, time, date) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.editTDL(userid, id, lat, lng, task, time, date).then(result => {
                         if (result["matchedCount"] === 0) resolve(1)
@@ -113,7 +113,7 @@ function Users(db) {
     this.getFriendList = function (userid) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.getFriendList(userid).then(result => {
                         resolve(result)
