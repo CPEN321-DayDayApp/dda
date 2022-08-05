@@ -45,9 +45,7 @@ function Competition(userdb, leaderdb) {
                         // console.log(message);
                         let result = Array.from(message).map(Number);
                         console.log(result);
-                        var num=0;
                         while (Math.min(...result) != 9) {
-                            num++;
                             let minLevel = Math.min(...result);
                             let minIndex = result.indexOf(minLevel);
                             result[minIndex] = 9;
@@ -58,7 +56,7 @@ function Competition(userdb, leaderdb) {
                                 console.log('Current Opponent: ' + users[opponent].userid);
                                 Promise.all([userdb.editOpponentId(users[minIndex].userid, users[opponent].userid),
                                 userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)]).then(values=>{
-                                    if(num===(result.length+1)/2) resolve(200);
+                                    if(Math.min(...result) == 9) resolve(200);
 
                                 })   
                             }

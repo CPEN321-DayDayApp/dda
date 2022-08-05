@@ -399,14 +399,20 @@ Database.prototype.increaseAge = function(){
 
 Database.prototype.resetScore = function(){
     return this.connected.then(db =>
-        db.listCollections().toArray(function(err, collinfos) {
-            if(err) reject(err);
-            collinfos.forEach(collinfo => {
-                db.collection(collinfo['name'])
-                    .updateOne(
-                        { _id: "userinfo" },
-                        { $set: {score: 0} }
-                    )
+        new Promise((resolve,reject)=>{
+            db.listCollections().toArray(function(err, collinfos) {
+                if(err) reject(err);
+                var num=0;
+                collinfos.forEach(collinfo => {
+                    db.collection(collinfo['name'])
+                        .updateOne(
+                            { _id: "userinfo" },
+                            { $set: {score: 0} }
+                        ).then(result=>{
+                            num++;
+                            if(num==collinfos.length) resolve(200)
+                        })
+                })
             })
         })
     )
