@@ -2,25 +2,25 @@ const {
     PythonShell
 } = require('python-shell')
 // const LeaderBoard = require("./leaderboard")
-const Users = require("./Users")
-const Database = require('./Database');
-const LeaderBoard = require("./leaderboard")
+// const Users = require("./Users")
+// const Database = require('./Database');
+// const LeaderBoard = require("./leaderboard")
 
 const predict = new PythonShell('ml/predict.py');
 const retrain = new PythonShell('ml/retrain.py');
 
-const DB_URL = "mongodb://localhost:27017";
-const DB_NAME = "data"
-const DB_NAME2 = "leaderboard"
+// const DB_URL = "mongodb://localhost:27017";
+// const DB_NAME = "data"
+// const DB_NAME2 = "leaderboard"
 const ELO_CONSTANT = 32;
 const DAILY_LIMIT = 720;
 const SCORE_CONSTANT = 15;
 const LEVEL_RANGE = 5;
 
-const db = new Database(DB_URL, DB_NAME)
-const db2 = new Database(DB_URL, DB_NAME2)
-const user = new Users(db)
-const leaderboard = new LeaderBoard(db2)
+// const db = new Database(DB_URL, DB_NAME)
+// const db2 = new Database(DB_URL, DB_NAME2)
+// const user = new Users(db)
+// const leaderboard = new LeaderBoard(db2)
 
 function Competition(userdb, leaderdb) {
     this.assignNewOpponent = function () {
@@ -71,7 +71,9 @@ function Competition(userdb, leaderdb) {
         let updatedScore = [];
 
         leaderdb.getGlobalBoard().then(result => {
-            result.globalboard.forEach(element => element['modified'] = 0);
+            result.globalboard.forEach(element => {
+                element['modified'] = 0;
+            });
             let gb = result.globalboard;
             let retrainInput = [];
             userdb.getAllUsers().then(users => {
@@ -88,7 +90,7 @@ function Competition(userdb, leaderdb) {
                     let findUser = gb.filter(obj => {
                         return obj._id == user.userid
                     });
-                    if (findUser.length != 0 && findUser[0].modified == 0) {
+                    if (findUser.length !== 0 && findUser[0].modified === 0) {
                         let currUser = user;
                         let rankScore1 = gb.filter(obj => {
                             return obj._id == user.userid
@@ -98,7 +100,7 @@ function Competition(userdb, leaderdb) {
                             let findOpponent = gb.filter(obj => {
                                 return obj._id == opponent.id
                             });
-                            if (findOpponent.length != 0 && findOpponent[0].modified == 0) {
+                            if (findOpponent.length !== 0 && findOpponent[0].modified === 0) {
                                 let currOpponent = opponent;
                                 let rankScore2 = gb.filter(obj => {
                                     return obj._id == currOpponent.id

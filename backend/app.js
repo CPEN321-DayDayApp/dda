@@ -7,9 +7,9 @@ const Info = require("./info")
 const LeaderBoard = require("./leaderboard")
 const Competition = require("./competition")
 
-const {
-    PythonShell
-} = require('python-shell')
+// const {
+//     PythonShell
+// } = require('python-shell')
 const CronJob = require('cron').CronJob;
 
 //const { exec } = require("child_process");
