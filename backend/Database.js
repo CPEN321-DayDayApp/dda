@@ -403,7 +403,8 @@ Database.prototype.resetScore = function(){
             db.listCollections().toArray(function(err, collinfos) {
                 if(err) reject(err);
                 var num=0;
-                collinfos.forEach(collinfo => {
+                if(collinfos.length==0) resolve(200)
+                else collinfos.forEach(collinfo => {
                     db.collection(collinfo['name'])
                         .updateOne(
                             { _id: "userinfo" },
