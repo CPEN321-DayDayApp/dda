@@ -16,7 +16,7 @@ function Users() {
     }
     this.getTDL = function (userid) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
+            if (userid === 123456) resolve(0);
             else {
                 if (this.tdl.length === 0) resolve(1)
                 else resolve(this.tdl)
@@ -25,8 +25,8 @@ function Users() {
     }
     this.deleteTDL = function (userid, taskid) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
-            else if (this.tdl.length == 0) resolve(1)
+            if (userid === 123456) resolve(0);
+            else if (this.tdl.length === 0) resolve(1)
             else {
                 this.tdl = [];
                 resolve(2)
@@ -35,8 +35,8 @@ function Users() {
     }
     this.editTDL = function (userid, id, lat, lng, task, time, date) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
-            else if (this.tdl.length == 0) resolve(1)
+            if (userid === 123456) resolve(0);
+            else if (this.tdl.length === 0) resolve(1)
             else {
                 resolve(2)
             }
@@ -44,9 +44,9 @@ function Users() {
     }
     this.getFriendList = function (userid) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
+            if (userid === 123456) resolve(0);
             else {
-                if (this.friends.length == 0) resolve(1)
+                if (this.friends.length === 0) resolve(1)
                 else resolve(this.friends)
             }
         })
@@ -54,7 +54,7 @@ function Users() {
 
     this.getFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
+            if (userid === 123456) resolve(0);
             else {
                 if (this.friends.length === 0) resolve(0)
                 else if (email == "friendsss@gmail.com") resolve(0)
@@ -65,7 +65,7 @@ function Users() {
 
     this.addFriend = function (userid, email, name, friendId) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
+            if (userid === 123456) resolve(0);
             else if (friendId == "222223") resolve(0)
             else {
                 if (this.friends.length === 0) {
@@ -78,7 +78,7 @@ function Users() {
     }
     this.deleteFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if (userid == 123456) resolve(0);
+            if (userid === 123456) resolve(0);
             else {
                 if (this.friends.length == 0) resolve(1)
                 else {

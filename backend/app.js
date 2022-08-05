@@ -146,7 +146,7 @@ app.get("/leaderboard/global", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             leaderboard.getGlobalBoard().then(result => {
-                if (result == 201) res.status(201).send(JSON.stringify({ "globalboard": [] }))
+                if (result === 201) res.status(201).send(JSON.stringify({ "globalboard": [] }))
                 else res.status(200).send(JSON.stringify(result))
             }).catch(err => {
                 res.status(400).send(err)
@@ -221,7 +221,7 @@ app.post("/location", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.addLocation(result.userid, req.body.lat, req.body.lng).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result === 404) res.status(404).send("User not found")
                 else res.status(200).send("Location added successfully\n")
             }).catch(err => {
                 res.status(400).send(err)
@@ -250,7 +250,7 @@ app.post("/tdl", async (req, res) => {
         .then((result) => {
             tdl.addTDL(result.userid, req.body.taskId, req.body.lat, req.body.lng, req.body.task, req.body.time, req.body.date).then(result => {
                 var message;
-                if (result == 404) message = "User not found\n";
+                if (result === 404) message = "User not found\n";
                 else if (result === 405) message = "Task already added, Use PUT request to edit\n";
                 else message = "TDL added successfully\n";
                 res.status(result).send(message)
@@ -267,8 +267,8 @@ app.put("/tdl/:taskid", async (req, res) => {
         .then((result) => {
             tdl.editTDL(result.userid, req.params['taskid'], req.body.lat, req.body.lng, req.body.task, req.body.time, req.body.date).then(result => {
                 var message;
-                if (result == 404) message = "User not found\n";
-                else if (result == 405) message = "Task not exist\n";
+                if (result === 404) message = "User not found\n";
+                else if (result === 405) message = "Task not exist\n";
                 else message = "TDL edited successfully\n";
                 res.status(result).send(message)
             }).catch(err => {
@@ -371,7 +371,7 @@ app.get('/tdl', (req, res) => {
         .then((result) => {
             tdl.getTDL(result.userid).then(result => {
                 if (result === 404) res.status(404).send("User not exist");
-                else if (result == 201) res.status(201).send(JSON.stringify({ "tasklist": [] }));
+                else if (result === 201) res.status(201).send(JSON.stringify({ "tasklist": [] }));
                 else res.status(200).send(JSON.stringify({
                     "tasklist": result
                 }));
@@ -404,8 +404,8 @@ app.post("/friend/:email", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             friend.addFriend(result.userid, req.params['email'], req.body.name, req.body.friendId).then(response => {
-                if (response == 404) res.status(404).send("User not found\n")
-                else if (response == 201) res.status(201).send("already friend\n")
+                if (response === 404) res.status(404).send("User not found\n")
+                else if (response === 201) res.status(201).send("already friend\n")
                 else {
                     Promise.all([leaderboard.addToFriendBoard(result.userid, req.body.friendId), leaderboard.addToFriendBoard(req.body.friendId, result.userid)])
                         .then(response => {
@@ -437,7 +437,7 @@ app.get("/friend/:email", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             friend.getFriend(result.userid, req.params['email']).then(result => {
-                if (result == 404) res.status(404).send("User not exist")
+                if (result === 404) res.status(404).send("User not exist")
                 else res.status(200).send(JSON.stringify(result))
             }).catch(err => {
                 res.status(400).send(err)
@@ -451,7 +451,7 @@ app.delete("/friend/:email", async (req, res) => {
         .then((result) => {
             friend.deleteFriend(result.userid, req.params['email']).then(response => {
                 if (response === 404) res.status(response).send("User not found\n")
-                else if (response == 405) res.status(response).send("Friend not exist\n")
+                else if (response === 405) res.status(response).send("Friend not exist\n")
                 else {
                     Promise.all([leaderboard.removeFromFriendBoard(result.userid, response.friendId), leaderboard.removeFromFriendBoard(response.friendId, result.userid)])
                         .then(response => {
@@ -471,8 +471,8 @@ app.post("/pn", async (req, res) => {
         .then((result) => {
             info.pn(result.userid, req.body.email).then(result => {
                 var message;
-                if (result == 404) message = "User not found\n";
-                else if (result == 405) message = "Friend not exist\n";
+                if (result === 404) message = "User not found\n";
+                else if (result === 405) message = "Friend not exist\n";
                 else message = "PN sent successfully\n";
                 res.status(result).send(message)
             }).catch(err => {

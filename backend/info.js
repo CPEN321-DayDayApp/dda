@@ -4,7 +4,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != Number && !isNaN(lat) && !isNaN(lng)) {
                 user.addLocation(userid, lat, lng).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }
@@ -30,7 +30,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != Number && !isNaN(lat) && !isNaN(lng)) {
                 user.deleteLocation(userid, lat, lng).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(200)
                 })
             }

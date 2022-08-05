@@ -151,7 +151,7 @@ Database.prototype.getFriendList = function (userid) {
         new Promise((resolve, reject) => {
             db.collection(userid).findOne({ _id: "userinfo" })
                 .then((result) => {
-                    if (result.friendlist.length == 0) resolve(1);
+                    if (result.friendlist.length === 0) resolve(1);
                     else resolve({ "friendlist": result.friendlist });
                 }, (err) => { reject(err); });
         })
@@ -400,21 +400,21 @@ Database.prototype.increaseAge = function () {
     )
 }
 
-Database.prototype.resetScore = function(){
+Database.prototype.resetScore = function () {
     return this.connected.then(db =>
-        new Promise((resolve,reject)=>{
-            db.listCollections().toArray(function(err, collinfos) {
-                if(err) reject(err);
-                var num=0;
-                if(collinfos.length==0) resolve(200)
+        new Promise((resolve, reject) => {
+            db.listCollections().toArray(function (err, collinfos) {
+                if (err) reject(err);
+                var num = 0;
+                if (collinfos.length === 0) resolve(200)
                 else collinfos.forEach(collinfo => {
                     db.collection(collinfo['name'])
                         .updateOne(
                             { _id: "userinfo" },
-                            { $set: {score: 0} }
-                        ).then(result=>{
+                            { $set: { score: 0 } }
+                        ).then(result => {
                             num++;
-                            if(num==collinfos.length) resolve(200)
+                            if (num == collinfos.length) resolve(200)
                         })
                 })
             })

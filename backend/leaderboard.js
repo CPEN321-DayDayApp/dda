@@ -191,7 +191,7 @@ function LeaderBoard(db) {
                     .toArray((err, result) => {
                         if (err) reject(err)
                         else {
-                            if (result.length == 0) resolve(201)
+                            if (result.length === 0) resolve(201)
                             else {
                                 resolve({ "friendboard": result })
                             }

@@ -43,7 +43,7 @@ function Users(db) {
         return db.connected.then(database =>
             new Promise((resolve, reject) => {
                 this.userExist(userid).then(result => {
-                    if (result == 0) resolve(0)
+                    if (result === 0) resolve(0)
                     else {
                         database.collection(userid).findOne({ _id })
                             .then((result) => {
@@ -62,8 +62,8 @@ function Users(db) {
     this.addTDL = function (userid, id, lat, lng, task, time, date) {
         return new Promise((resolve, reject) => {
             this.tdlExist(userid, id).then(result => {
-                if (result == 0) resolve(0)
-                else if (result == 1) resolve(1)
+                if (result === 0) resolve(0)
+                else if (result === 1) resolve(1)
                 else {
                     db.addTDL(userid, id, lat, lng, task, time, date).then(result => {
                         resolve(result)
@@ -103,7 +103,7 @@ function Users(db) {
                 if (result == 0) resolve(0)
                 else {
                     db.editTDL(userid, id, lat, lng, task, time, date).then(result => {
-                        if (result["matchedCount"] == 0) resolve(1)
+                        if (result["matchedCount"] === 0) resolve(1)
                         else resolve(result)
                     })
                 }
