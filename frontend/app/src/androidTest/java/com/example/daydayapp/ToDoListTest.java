@@ -16,6 +16,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,7 @@ public class ToDoListTest {
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
+    @Before
     public void clickAddTaskButton() throws InterruptedException {
         findMarkerAndClick("1");
         // Check if add task button exists and click it
@@ -62,17 +63,14 @@ public class ToDoListTest {
     }
 
     @Test
-    public void clickCancelNewTaskButton() throws InterruptedException {
-        clickAddTaskButton();
+    public void clickCancelNewTaskButton() {
         onView(withId(R.id.newTaskPopup_cancelButton)).perform(new MyAction("click"));
         // Check if dialog dismissed
         onView(withId(R.id.addTaskTextView)).check(doesNotExist());
     }
 
     @Test
-    public void addTaskWithoutTitle() throws InterruptedException {
-        clickAddTaskButton();
-
+    public void addTaskWithoutTitle() {
         // Click "SAVE" button directly without filling task name
         onView(withId(R.id.newTaskPopup_saveButton)).perform(new MyAction("click"));
         // Check if the toast message is displayed correctly
@@ -80,8 +78,7 @@ public class ToDoListTest {
     }
 
     @Test
-    public void addTaskWithAllSpaceTitle() throws InterruptedException {
-        clickAddTaskButton();
+    public void addTaskWithAllSpaceTitle() {
 
         // Add title with only white spaces
         onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "    "));
@@ -93,8 +90,6 @@ public class ToDoListTest {
 
     @Test
     public void addValidTaskThenEditThenDelete() throws InterruptedException {
-        /* Add valid task */
-        clickAddTaskButton();
         // Fill in the task description
         onView(withId(R.id.newTaskPopup_title)).perform(new MyAction("fill", "test task 0"));
         onView(withId(R.id.newTaskPopup_select_date_button)).perform(new MyAction("fill", "AUG 15 2022"));
