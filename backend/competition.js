@@ -26,48 +26,50 @@ function Competition(userdb, leaderdb) {
     this.assignNewOpponent = function () {
         return new Promise((resolve, reject) => {
             userdb.getAllUsers().then(users => {
-                //console.log(users)
-                let input = [];
-                users.forEach(element => {
-                    input.push(element.age)
-                    input.push(',')
-                    if (element.gender == 'male') input.push(0)
-                    else input.push(1)
-                    input.push(',')
-                    input.push(Math.round(element.score * SCORE_CONSTANT / 7))
-                    input.push('\n')
-                });
-                // console.log(input)
-                // console.log(input.join(''))
-                predict.send(input.join(''));
-                predict.on('message', function (message) {
-                    // console.log(message);
-                    let result = Array.from(message).map(Number);
-                    console.log(result);
-                    var num=0;
-                    while (Math.min(...result) != 9) {
-                        num++;
-                        let minLevel = Math.min(...result);
-                        let minIndex = result.indexOf(minLevel);
-                        result[minIndex] = 9;
-                        console.log('Current Lowest Level: ' + users[minIndex].userid);
-                        if (Math.min(...result) != 9) {
-                            let opponent = result.indexOf(Math.min(...result));
-                            result[opponent] = 9;
-                            console.log('Current Opponent: ' + users[opponent].userid);
-                            Promise.all([userdb.editOpponentId(users[minIndex].userid, users[opponent].userid),
-                            userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)]).then(values=>{
-                                if(num===(result.length+1)/2) resolve(200);
+                if(users.length != 0){
+                    //console.log(users)
+                    let input = [];
+                    users.forEach(element => {
+                        input.push(element.age)
+                        input.push(',')
+                        if (element.gender == 'male') input.push(0)
+                        else input.push(1)
+                        input.push(',')
+                        input.push(Math.round(element.score * SCORE_CONSTANT / 7))
+                        input.push('\n')
+                    });
+                    // console.log(input)
+                    // console.log(input.join(''))
+                    predict.send(input.join(''));
+                    predict.on('message', function (message) {
+                        // console.log(message);
+                        let result = Array.from(message).map(Number);
+                        console.log(result);
+                        var num=0;
+                        while (Math.min(...result) != 9) {
+                            num++;
+                            let minLevel = Math.min(...result);
+                            let minIndex = result.indexOf(minLevel);
+                            result[minIndex] = 9;
+                            console.log('Current Lowest Level: ' + users[minIndex].userid);
+                            if (Math.min(...result) != 9) {
+                                let opponent = result.indexOf(Math.min(...result));
+                                result[opponent] = 9;
+                                console.log('Current Opponent: ' + users[opponent].userid);
+                                Promise.all([userdb.editOpponentId(users[minIndex].userid, users[opponent].userid),
+                                userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)]).then(values=>{
+                                    if(num===(result.length+1)/2) resolve(200);
 
-                            })   
+                                })   
+                            }
                         }
-                    }
-                })
-                predict.end(function (err, code, signal) {
-                    if (err) reject("Error: " + err);
-                    console.log('The exit code was: ' + code);
-                    console.log('The exit signal was: ' + signal);
-                });
+                    })
+                    predict.end(function (err, code, signal) {
+                        if (err) reject("Error: " + err);
+                        console.log('The exit code was: ' + code);
+                        console.log('The exit signal was: ' + signal);
+                    });
+                }
             });
         })
     }
