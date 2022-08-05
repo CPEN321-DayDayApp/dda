@@ -26,7 +26,7 @@ function Competition(userdb, leaderdb) {
     this.assignNewOpponent = function () {
         return new Promise((resolve, reject) => {
             userdb.getAllUsers().then(users => {
-                if(users.length != 0){
+                if (users.length != 0) {
                     resolve(200)
                     let input = [];
                     users.forEach(element => {
@@ -55,7 +55,7 @@ function Competition(userdb, leaderdb) {
                                 result[opponent] = 9;
                                 console.log('Current Opponent: ' + users[opponent].userid);
                                 userdb.editOpponentId(users[minIndex].userid, users[opponent].userid)
-                                userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)  
+                                userdb.editOpponentId(users[opponent].userid, users[minIndex].userid)
                             }
                         }
                     })
@@ -74,10 +74,10 @@ function Competition(userdb, leaderdb) {
         return new Promise((resolve, reject) => {
             let updatedScore = [];
             let retrainInput = [];
-            Promise.all([leaderdb.getGlobalBoard(),userdb.getAllUsers()]).then(result => {
+            Promise.all([leaderdb.getGlobalBoard(), userdb.getAllUsers()]).then(result => {
                 let gb = result[0].globalboard;
-                var num=0;
-                if(result[1].length==0) resolve(200)
+                var num = 0;
+                if (result[1].length === 0) resolve(200)
                 else result[1].forEach(user => {
                     retrainInput.push(user.age)
                     retrainInput.push(',')
@@ -98,7 +98,7 @@ function Competition(userdb, leaderdb) {
                     userdb.getOpponent(currUser.userid).then(opponent => {
                         num++;
                         let findOpponent = gb.find(obj => obj._id == opponent.id);
-                        if (findUser!== undefined && updatedScore.find(response =>response['userid']===user.userid)===undefined&&findOpponent!== undefined && updatedScore.find(response =>response['userid']===opponent.id)===undefined) {
+                        if (findUser !== undefined && updatedScore.find(response => response['userid'] === user.userid) === undefined && findOpponent !== undefined && updatedScore.find(response => response['userid'] === opponent.id) === undefined) {
                             let currOpponent = opponent;
                             let rankScore2 = findOpponent.score;
                             let score2 = currOpponent.score;
@@ -120,13 +120,13 @@ function Competition(userdb, leaderdb) {
                             });
                             console.log(updatedScore)
                         }
-                        if(num===result[1].length){
+                        if (num === result[1].length) {
                             this.retrainModel(retrainInput);
                             leaderdb.updateAllBoard(updatedScore).then(result => {
                                 resolve(result)
                             });
                         }
-                    })            
+                    })
                 })
             }).catch(err => {
                 reject(err);
@@ -134,7 +134,7 @@ function Competition(userdb, leaderdb) {
         })
     }
 
-    this.retrainModel=function(retrainInput){
+    this.retrainModel = function (retrainInput) {
         retrain.send(retrainInput.join(''));
         retrain.on('message', function (message) {
             console.log(message);
