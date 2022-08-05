@@ -80,7 +80,8 @@ function Competition(userdb, leaderdb) {
             Promise.all([leaderdb.getGlobalBoard(),userdb.getAllUsers()]).then(result => {
                 let gb = result[0].globalboard;
                 var num=0;
-                result[1].forEach(user => {
+                if(result[1].length==0) resolve(200)
+                else result[1].forEach(user => {
                     retrainInput.push(user.age)
                     retrainInput.push(',')
                     if (user.gender == 'male') retrainInput.push(0)
