@@ -400,35 +400,28 @@ Database.prototype.increaseAge = function () {
     )
 }
 
-Database.prototype.resetScore = function () {
+Database.prototype.resetScore = function(){
     return this.connected.then(db =>
-<<<<<<< HEAD
-        new Promise((resolve, reject) => {
-            db.listCollections().toArray(function (err, collinfos) {
-                if (err) reject(err);
-                var num = 0;
-                collinfos.forEach(collinfo => {
-=======
         new Promise((resolve,reject)=>{
             db.listCollections().toArray(function(err, collinfos) {
                 if(err) reject(err);
                 var num=0;
                 if(collinfos.length==0) resolve(200)
                 else collinfos.forEach(collinfo => {
->>>>>>> 4d1873ecf90a3a34bb7eab2d4ce9c32846bd111c
                     db.collection(collinfo['name'])
                         .updateOne(
                             { _id: "userinfo" },
-                            { $set: { score: 0 } }
-                        ).then(result => {
+                            { $set: {score: 0} }
+                        ).then(result=>{
                             num++;
-                            if (num == collinfos.length) resolve(200)
+                            if(num==collinfos.length) resolve(200)
                         })
                 })
             })
         })
     )
 }
+
 
 Database.prototype.editStatus = function (userid, status) {
     return this.connected.then(db =>
