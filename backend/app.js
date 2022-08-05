@@ -68,9 +68,11 @@ var newWeek = new CronJob(
         })
     },
     null,
-    true,
+    false,
     'America/Los_Angeles'
 );
+
+newWeek.start();
 
 var newYear = new CronJob(
     '59 59 23 31 11 *',
@@ -78,9 +80,11 @@ var newYear = new CronJob(
         db.increaseAge();
     },
     null,
-    true,
+    false,
     'America/Los_Angeles'
 );
+
+newYear.start();
 
 // app.use(express.json());
 app.use(express.json({
@@ -235,7 +239,7 @@ app.delete("/location", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
             info.deleteLocation(result.userid, parseFloat(req.headers.lat), parseFloat(req.headers.lng)).then(result => {
-                if (result == 404) res.status(404).send("User not found")
+                if (result === 404) res.status(404).send("User not found")
                 else res.status(200).send("Location deleted successfully\n")
             }).catch(err => {
                 res.status(400).send(err)
@@ -388,8 +392,8 @@ app.delete("/tdl/:taskid", async (req, res) => {
         .then((result) => {
             tdl.deleteTDL(result.userid, req.params['taskid']).then(result => {
                 var message;
-                if (result == 404) message = "User not found\n";
-                else if (result == 405) message = "Task not exist\n";
+                if (result === 404) message = "User not found\n";
+                else if (result === 405) message = "Task not exist\n";
                 else message = "TDL deleted successfully\n";
                 res.status(result).send(message)
             }).catch(err => {

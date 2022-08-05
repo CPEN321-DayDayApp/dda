@@ -17,7 +17,7 @@ function Info(user) {
         return new Promise((resolve, reject) => {
             if (!isNaN(userid) && typeof (userid) != Number) {
                 user.getLocation(userid).then(result => {
-                    if (result == 0) resolve(404)
+                    if (result === 0) resolve(404)
                     else resolve(result)
                 })
             }

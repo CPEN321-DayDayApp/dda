@@ -80,7 +80,7 @@ function Users() {
         return new Promise((resolve, reject) => {
             if (userid === 123456) resolve(0);
             else {
-                if (this.friends.length == 0) resolve(1)
+                if (this.friends.length === 0) resolve(1)
                 else {
                     this.friends = []
                     resolve(2)

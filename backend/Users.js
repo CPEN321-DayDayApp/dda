@@ -75,7 +75,7 @@ function Users(db) {
     this.getTDL = function (userid) {
         return new Promise((resolve, reject) => {
             this.userExist(userid).then(result => {
-                if (result == 0) resolve(0)
+                if (result === 0) resolve(0)
                 else {
                     db.getTDL(userid).then(result => {
                         resolve(result)
