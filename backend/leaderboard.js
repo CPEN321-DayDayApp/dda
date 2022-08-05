@@ -54,52 +54,6 @@ function LeaderBoard(db){
     }
     
     // without competition
-    this.scoreUpdateGlobal= function(userid, score){
-        return db.connected.then(db =>
-            new Promise((resolve, reject) => {
-                db.collection("globalboard").updateOne(
-                    { _id: userid },
-                    { $set: {score} }
-                )
-                .then((result) => { 
-                    this.scoreUpdateHelper("globalboard").then(result=>{
-                        resolve(result);
-                    })
-                 }, (err) => { reject(err); });
-            })
-        )
-    }
-    this.scoreUpdateFriend= function(userid, score){
-        return db.connected.then(db =>
-            new Promise((resolve, reject) => {
-                db.collection(userid).find({}).toArray((err,result)=>{
-                    var num=0;
-                    result.forEach(document=>{
-                        db.collection(document['_id']).updateOne(
-                            { _id: userid },
-                            { $set: {score} }
-                        ).then(response=>{
-                            this.scoreUpdateHelper(document['_id']).then(response=>{
-                                num++
-                                if(num==result.length) resolve(200);
-                            })
-                        })
-                    })
-                })
-            })
-        )
-    }
-    this.scoreUpdate= function(userid, score){
-        return db.connected.then(db =>
-            new Promise((resolve, reject) => {
-                var p=[];
-                p.push(this.scoreUpdateGlobal(userid, score));
-                p.push(this.scoreUpdateFriend(userid, score));
-                Promise.all(p).then(values=>resolve(200))
-            })
-        )
-    }
-
     // this.scoreUpdateGlobal= function(userid, score){
     //     return db.connected.then(db =>
     //         new Promise((resolve, reject) => {
@@ -108,7 +62,9 @@ function LeaderBoard(db){
     //                 { $set: {score} }
     //             )
     //             .then((result) => { 
+    //                 this.scoreUpdateHelper("globalboard").then(result=>{
     //                     resolve(result);
+    //                 })
     //              }, (err) => { reject(err); });
     //         })
     //     )
@@ -123,66 +79,110 @@ function LeaderBoard(db){
     //                         { _id: userid },
     //                         { $set: {score} }
     //                     ).then(response=>{
-    //                         num++
-    //                         if(num==result.length) resolve(200);
+    //                         this.scoreUpdateHelper(document['_id']).then(response=>{
+    //                             num++
+    //                             if(num==result.length) resolve(200);
+    //                         })
     //                     })
     //                 })
     //             })
     //         })
     //     )
     // }
-    // this.scoreUpdate= function(users){
+    // this.scoreUpdate= function(userid, score){
     //     return db.connected.then(db =>
     //         new Promise((resolve, reject) => {
-    //             var num=0;
-    //             users.forEach(user => {
-    //                 Promise.all([this.scoreUpdateGlobal(user.userid,user.score),this.scoreUpdateFriend(user.userid,user.score)])
-    //                 .then(values=>{
-    //                     num++;
-    //                     if(num==users.length) resolve(1)
-    //                 })
-    //             })
+    //             var p=[];
+    //             p.push(this.scoreUpdateGlobal(userid, score));
+    //             p.push(this.scoreUpdateFriend(userid, score));
+    //             Promise.all(p).then(values=>resolve(200))
     //         })
     //     )
     // }
 
-    // this.updateFriendBoard= function(users){
-    //     return db.connected.then(db =>
-    //         new Promise((resolve, reject) => {
-    //             var num=0
-    //             users.forEach(user => {
-    //                 this.scoreUpdateHelper(user.userid)
-    //                 .then(value=>{
-    //                     num++;
-    //                     if(num==users.length) resolve(1)
-    //                 })
-    //             })
-    //         })
-    //     )
-    // }
-    // this.updateGlobalBoard= function(){
-    //     return db.connected.then(db =>
-    //         new Promise((resolve, reject) => {
-    //             this.scoreUpdateHelper("globalboard")
-    //             .then(value=>{
-    //                 resolve(1)
-    //             })
-    //         })
-    //     )
-    // }
+    this.scoreUpdateGlobal= function(userid, score){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                db.collection("globalboard").updateOne(
+                    { _id: userid },
+                    { $set: {score} }
+                )
+                .then((result) => { 
+                        resolve(result);
+                 }, (err) => { reject(err); });
+            })
+        )
+    }
+    this.scoreUpdateFriend= function(userid, score){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                db.collection(userid).find({}).toArray((err,result)=>{
+                    var num=0;
+                    result.forEach(document=>{
+                        db.collection(document['_id']).updateOne(
+                            { _id: userid },
+                            { $set: {score} }
+                        ).then(response=>{
+                            num++
+                            if(num==result.length) resolve(200);
+                        })
+                    })
+                })
+            })
+        )
+    }
+    this.scoreUpdate= function(users){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                var num=0;
+                users.forEach(user => {
+                    Promise.all([this.scoreUpdateGlobal(user.userid,user.score),this.scoreUpdateFriend(user.userid,user.score)])
+                    .then(values=>{
+                        num++;
+                        if(num==users.length) resolve(1)
+                    })
+                })
+            })
+        )
+    }
 
-    // this.updateAllBoard= function(users){
-    //     return db.connected.then(db =>
-    //         new Promise((resolve, reject) => {
-    //             this.scoreUpdate(users).then(result=>{
-    //                 Promise.all([this.updateFriendBoard(users),this.updateGlobalBoard()])
-    //                 .then(values=>{
-    //                     resolve(200)
-    //                 })
-    //             })
-    //         })
-    //     )
-    // }
+    this.updateFriendBoard= function(users){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                var num=0
+                users.forEach(user => {
+                    this.scoreUpdateHelper(user.userid)
+                    .then(value=>{
+                        num++;
+                        if(num==users.length) resolve(1)
+                    })
+                })
+            })
+        )
+    }
+    this.updateGlobalBoard= function(){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                this.scoreUpdateHelper("globalboard")
+                .then(value=>{
+                    resolve(1)
+                })
+            })
+        )
+    }
+
+    this.updateAllBoard= function(users){
+        return db.connected.then(db =>
+            new Promise((resolve, reject) => {
+                this.scoreUpdate(users).then(result=>{
+                    Promise.all([this.updateFriendBoard(users),this.updateGlobalBoard()])
+                    .then(values=>{
+                        resolve(200)
+                    })
+                })
+            })
+        )
+    }
 
     this.scoreUpdateHelper= function(collname){
         return db.connected.then(db =>

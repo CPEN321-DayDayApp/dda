@@ -72,113 +72,76 @@ function Competition(userdb, leaderdb) {
     this.settleMatch = function () {
         return new Promise((resolve, reject) => {
             let updatedScore = [];
-
-            leaderdb.getGlobalBoard().then(result => {
-                result.globalboard.forEach(element => {
-                    element['modified'] = 0;
-                });
-                let gb = result.globalboard;
-                let retrainInput = [];
-                userdb.getAllUsers().then(users => {
-                    users.forEach(user => {
-                        retrainInput.push(user.age)
-                        retrainInput.push(',')
-                        if (user.gender == 'male') retrainInput.push(0)
-                        else retrainInput.push(1)
-                        retrainInput.push(',')
-                        retrainInput.push(Math.round(user.score * SCORE_CONSTANT / 7))
-                        retrainInput.push(',')
-                        let tmp = Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT));
-                        if (tmp > LEVEL_RANGE) tmp = LEVEL_RANGE;
-                        if (tmp < 0) tmp = 0;
-                        retrainInput.push(tmp)
-                        retrainInput.push('\n')
-                        let findUser = gb.filter(obj => {
-                            return obj._id == user.userid
-                        });
-                        if (findUser.length !== 0 && findUser[0].modified === 0) {
-                            let currUser = user;
-                            let rankScore1 = gb.filter(obj => {
-                                return obj._id == user.userid
-                            })[0].score;
-                            let score1 = currUser.score;
-                            userdb.getOpponent(currUser.userid).then(opponent => {
-                                let findOpponent = gb.filter(obj => {
-                                    return obj._id == opponent.id
-                                });
-                                if (findOpponent.length !== 0 && findOpponent[0].modified === 0) {
-                                    let currOpponent = opponent;
-                                    let rankScore2 = gb.filter(obj => {
-                                        return obj._id == currOpponent.id
-                                    })[0].score;
-                                    let score2 = currOpponent.score;
-                                    let win = 0;
-                                    if (score1 > score2) win = 1;
-                                    if (score1 != score2) {
-                                        let p1 = rankScore1 / (rankScore1 + rankScore2);
-                                        let p2 = rankScore2 / (rankScore1 + rankScore2);
-                                        rankScore1 = Math.round(rankScore1 + ELO_CONSTANT * (win - p1));
-                                        rankScore2 = Math.round(rankScore2 + ELO_CONSTANT * (1 - win - p2));
-                                        for (let i = 0; i < gb.length; i++) {
-                                            if (gb[i]._id == currUser.userid) {
-                                                gb[i].score = rankScore1;
-                                                gb[i].modified = 1;
-                                            } else if (gb[i]._id == currOpponent.id) {
-                                                gb[i].score = rankScore2;
-                                                gb[i].modified = 1;
-                                            }
-                                        }
-                                        updatedScore.push({
-                                            "userid": currUser.userid,
-                                            "score": rankScore1
-                                        });
-                                        updatedScore.push({
-                                            "userid": currOpponent.id,
-                                            "score": rankScore2
-                                        });
-                                    } else {
-                                        for (let i = 0; i < gb.length; i++) {
-                                            if (gb[i]._id == currUser.userid) {
-                                                gb[i].modified = 1;
-                                            } else if (gb[i]._id == currOpponent.id) {
-                                                gb[i].modified = 1;
-                                            }
-                                        }
-                                        updatedScore.push({
-                                            "userid": currUser.userid,
-                                            "score": rankScore1
-                                        });
-                                        updatedScore.push({
-                                            "userid": currOpponent.id,
-                                            "score": rankScore2
-                                        });
-                                    }
-                                    console.log(updatedScore)
-                                    leaderdb.scoreUpdate(updatedScore).then(result => {
-                                        console.log(result)
-                                    });
-                                    updatedScore = [];
-                                }
-                            })
+            let retrainInput = [];
+            Promise.all([leaderdb.getGlobalBoard(),userdb.getAllUsers()]).then(result => {
+                let gb = result[0].globalboard;
+                var num=0;
+                result[1].forEach(user => {
+                    retrainInput.push(user.age)
+                    retrainInput.push(',')
+                    if (user.gender == 'male') retrainInput.push(0)
+                    else retrainInput.push(1)
+                    retrainInput.push(',')
+                    retrainInput.push(Math.round(user.score * SCORE_CONSTANT / 7))
+                    retrainInput.push(',')
+                    let tmp = Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT));
+                    if (tmp > LEVEL_RANGE) tmp = LEVEL_RANGE;
+                    if (tmp < 0) tmp = 0;
+                    retrainInput.push(tmp)
+                    retrainInput.push('\n')
+                    let findUser = gb.find(obj => obj._id === user.userid);
+                    let currUser = user;
+                    let rankScore1 = findUser.score;
+                    let score1 = currUser.score;
+                    userdb.getOpponent(currUser.userid).then(opponent => {
+                        num++;
+                        let findOpponent = gb.find(obj => obj._id == opponent.id);
+                        if (findUser!== undefined && updatedScore.find(response =>response['userid']===user.userid)===undefined&&findOpponent!== undefined && updatedScore.find(response =>response['userid']===opponent.id)===undefined) {
+                            let currOpponent = opponent;
+                            let rankScore2 = findOpponent.score;
+                            let score2 = currOpponent.score;
+                            let win = 0;
+                            if (score1 > score2) win = 1;
+                            if (score1 != score2) {
+                                let p1 = rankScore1 / (rankScore1 + rankScore2);
+                                let p2 = rankScore2 / (rankScore1 + rankScore2);
+                                rankScore1 = Math.round(rankScore1 + ELO_CONSTANT * (win - p1));
+                                rankScore2 = Math.round(rankScore2 + ELO_CONSTANT * (1 - win - p2));
+                            }
+                            updatedScore.push({
+                                "userid": currOpponent.id,
+                                "score": rankScore2
+                            });
+                            updatedScore.push({
+                                "userid": currUser.userid,
+                                "score": rankScore1
+                            });
+                            console.log(updatedScore)
                         }
-                    })
-                    retrain.send(retrainInput.join(''));
-                    retrain.on('message', function (message) {
-                        console.log(message);
-                    })
-                    retrain.end(function (err, code, signal) {
-                        if (err) reject("Error: " + err);
-                        console.log('The exit code was: ' + code);
-                        console.log('The exit signal was: ' + signal);
-                        resolve(200);
-                    });
-                }).catch(err => {
-                    reject(err);
+                        if(num===result[1].length){
+                            this.retrain(retrainInput);
+                            leaderdb.updateAllBoard(updatedScore).then(result => {
+                                resolve(result)
+                            });
+                        }
+                    })            
                 })
             }).catch(err => {
                 reject(err);
             })
         })
+    }
+
+    this.retrain=function(retrainInput){
+        retrain.send(retrainInput.join(''));
+        retrain.on('message', function (message) {
+            console.log(message);
+        })
+        retrain.end(function (err, code, signal) {
+            if (err) throw err;
+            console.log('The exit code was: ' + code);
+            console.log('The exit signal was: ' + signal);
+        });
     }
 
 }
