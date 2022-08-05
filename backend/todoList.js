@@ -16,16 +16,11 @@ function TodoList(user){
     }
     this.getTDL = function(userid){
         return new Promise((resolve, reject) => {
-                if(!isNaN(userid)&&typeof(userid)!=Number){
-                    user.getTDL(userid).then(result =>{
-                        if(result==0) resolve(404)
-                        else if(result==1) resolve(201)
-                        else resolve(result)
-                    })
-                }
-                else{
-                    reject("Invalid Input")
-                }
+                user.getTDL(userid).then(result =>{
+                    if(result==0) resolve(404)
+                    else if(result==1) resolve(201)
+                    else resolve(result)
+                })
             })
     }
     this.deleteTDL = function(userid,taskid){

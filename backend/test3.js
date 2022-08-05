@@ -1,7 +1,8 @@
 jest.mock('./Users')
 const Friend = require("./friend");
 const Users = require("./Users");
-const user = new Users()
+var db;
+const user = new Users(db)
 const friend = new Friend(user)
 module.exports = () => describe('friend test', () => { 
     test("add friend: invalid user", () => {
@@ -26,7 +27,7 @@ module.exports = () => describe('friend test', () => {
      });
      test("add friend: friend exist", () => {
         friend.addFriend("111111", "friend@gmail.com", "JY", "222222").then(data=>{
-         expect(data).toBe(200);
+         expect(data).toBe(201);
         })
      });
      test("get friendlist: invalid user", () => {
@@ -76,7 +77,7 @@ module.exports = () => describe('friend test', () => {
       });
       test("delete friend: successful", () => {
          friend.deleteFriend("111111","friend@gmail.com").then(data=>{
-          expect(data).toBe(200);
+          expect(data).toBe(2);
          })
       });
       test("delete friend: friend not exist", () => {

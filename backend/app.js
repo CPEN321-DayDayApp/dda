@@ -101,15 +101,11 @@ app.get("/user", async (req, res) => {
 app.post("/user", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
-            if (!isNaN(result.userid) && typeof (userid) != Number && (/\S[^\s@]*@\S+\.\S+/.test(result.email))) {
-                db.addUser(result.userid, result.email, result.name, req.body.token).then(response => {
-                    leaderboard.newPlayer(result.userid, result.name, 100).then(response => {
-                        res.status(200).send("User added successfully\n")
-                    })
+            db.addUser(result.userid, result.email, result.name, req.body.token).then(response => {
+                leaderboard.newPlayer(result.userid, result.name, 100).then(response => {
+                    res.status(200).send("User added successfully\n")
                 })
-            } else {
-                res.status(400).send("User added unsuccessfully\n")
-            }
+            })
         })
         .catch(console.error);
 
@@ -526,5 +522,6 @@ app.post("/pn", async (req, res) => {
 // });
 module.exports = {
     app,
-    db
+    db,
+    db2
 };

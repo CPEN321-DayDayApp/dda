@@ -1,7 +1,7 @@
 
 
-function Users(){
-    if (!(this instanceof Users)) return new Users();
+function Users(db){
+    if (!(this instanceof Users)) return db;
     this.tdl=[];
     this.friends=[];
     this.addTDL = function(userid, id, lat, lng, task, time, date){
@@ -70,7 +70,7 @@ function Users(){
             else{
                 if(this.friends.length==0){
                     this.friends.push({userid,email,name,friendId})
-                    resolve(1)
+                    resolve(2)
                 }
                 else resolve(1)
             }

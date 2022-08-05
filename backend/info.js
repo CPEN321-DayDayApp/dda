@@ -15,16 +15,11 @@ function Info(user){
     }
     this.getLocation = function(userid){
         return new Promise((resolve, reject) => {
-                if(!isNaN(userid)&&typeof(userid)!=Number){
-                    user.getLocation(userid).then(result=>{
-                        if(result==0) resolve(404)
-                        else resolve(result)
-                    })
-                }
-                else{
-                    reject("Invalid Input")
-                }
+            user.getLocation(userid).then(result=>{
+                if(result==0) resolve(404)
+                else resolve(result)
             })
+        })
     }
     this.deleteLocation = function(userid, lat, lng){
         return new Promise((resolve, reject) => {
@@ -70,15 +65,10 @@ function Info(user){
     
     this.editToken = function(userid, token){
         return new Promise((resolve, reject) => {
-            if(!isNaN(userid)&&typeof(userid)!=Number){
                 user.editToken(userid, token).then(result=>{
                     if(result==0) resolve(404)
                     else resolve(200)
                 })
-            }
-            else{
-                reject("Invalid Input")
-            }
         })
     }
 
