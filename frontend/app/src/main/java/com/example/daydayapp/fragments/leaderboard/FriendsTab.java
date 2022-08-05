@@ -66,7 +66,6 @@ public class FriendsTab extends Fragment {
         refreshFriendsLB.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                //TODO: change url
                 final String url = "http://13.89.36.134:8000/leaderboard/friend";
                 HashMap<String, String> content = new HashMap<>();
                 JSONObject jsonContent = new JSONObject(content);
