@@ -119,7 +119,8 @@ Database.prototype.getAllUsers = function(){
             db.listCollections().toArray(function(err, collinfos) {
                 if(err) reject(err);
                 var users=[];
-                collinfos.forEach(collinfo => {
+                if(collinfos.length===0) resolve(users)
+                else collinfos.forEach(collinfo => {
                    db.collection(collinfo['name']).findOne({'_id': "userinfo"}).then(result=>{
                     users.push({'userid':collinfo['name'],'age':result.age,'gender':result.gender,'score':result.score})
                     if(users.length==collinfos.length) resolve(users)
