@@ -61,8 +61,10 @@ async function verify(token) {
 var newWeek = new CronJob(
     '59 59 23 * * 0',
     function () {
-        Promise.all([competition.settleMatch(),competition.assignNewOpponent()]).then(values=>{
-            db.resetScore();
+        competition.settleMatch().then(values=>{
+            competition.assignNewOpponent().then(values=>{
+                db.resetScore();
+            })
         })
     },
     null,

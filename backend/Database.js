@@ -103,7 +103,10 @@ Database.prototype.getOpponent = function(userid){
                     else db.collection(result.opponentid)
                     .findOne({_id:"userinfo"})
                     .then((response) => {
-                        resolve({'id':result.opponentid,'name':response.name,"score":response.score})
+                        if(response.opponentid===userid) resolve({'id':result.opponentid,'name':response.name,"score":response.score})
+                        else{
+                            resolve('no opponent')
+                        }
                     }, (err) => { reject(err); });
                 }, (err) => { reject(err); });
         })
