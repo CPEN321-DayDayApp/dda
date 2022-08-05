@@ -126,6 +126,17 @@ app.get("/location", async (req, res) => {
         .catch(console.error);
 });
 
+app.post("/competition", async (req, res) => {
+    verify(req.headers['authorization'])
+        .then((result) => {
+            Promise.all([competition.settleMatch(),competition.assignNewOpponent()]).then(values=>{
+                db.resetScore();
+                res.status(200).send("For Test")
+            })
+        })
+        .catch(console.error);
+});
+
 app.get("/leaderboard/global", async (req, res) => {
     verify(req.headers['authorization'])
         .then((result) => {
