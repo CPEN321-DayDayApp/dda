@@ -9,15 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,19 +20,25 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.android.volley.AuthFailureError;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.daydayapp.adapter.ToDoAdapter;
 import com.example.daydayapp.MainActivity;
-import com.example.daydayapp.model.ToDoModel;
 import com.example.daydayapp.R;
+import com.example.daydayapp.adapter.ToDoAdapter;
+import com.example.daydayapp.model.ToDoModel;
 import com.example.daydayapp.recycleritemtouchhepler.TdlRecyclerItemTouchHelper;
 import com.google.android.gms.maps.model.LatLng;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +46,6 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,13 +54,12 @@ import java.util.Objects;
 public class TdlListFragment extends Fragment implements LocationListener {
     private static final String TAG = "TdlList";
     private final MainActivity main;
-    private TdlFragment tdlFragment;
+    private final TdlFragment tdlFragment;
     private final ToDoAdapter tasksAdapter;
     private Location currLocation;
 
     private AlertDialog dialog;
     private EditText newTaskPopup_title;
-    private Button delete_location_button;
     private Button newTaskPopup_select_date_button;
     private Button newTaskPopup_select_duration_button;
     private ToggleButton start_study_button;
@@ -104,7 +99,7 @@ public class TdlListFragment extends Fragment implements LocationListener {
         listRecyclerView.setAdapter(tasksAdapter);
         ImageButton addTaskButton = view.findViewById(R.id.add_task_button);
         start_study_button = view.findViewById(R.id.start_study_button);
-        delete_location_button = view.findViewById(R.id.delete_location_button);
+        Button delete_location_button = view.findViewById(R.id.delete_location_button);
 
         addTaskButton.setOnClickListener(v -> {
             if (tasksAdapter.getCurrentStudyLocation() == null)
@@ -305,6 +300,7 @@ public class TdlListFragment extends Fragment implements LocationListener {
                 StringRequest deleteLocationRequest = new StringRequest(Request.Method.DELETE, urlDeleteLocation,
                         response -> {
                             tdlFragment.refreshMarker();
+                            tasksAdapter.deleteLocation(tasksAdapter.getCurrentStudyLocation());
                         }, error -> Log.e(TAG, error.toString())) {
                     @Override
                     public String getBodyContentType() {
@@ -347,10 +343,11 @@ public class TdlListFragment extends Fragment implements LocationListener {
                 response -> {
                     Log.d(TAG, "Successful");
                     try {
+                        Thread.sleep(500);
                         JSONArray tdlInfo = (JSONArray) response.get("tasklist");
                         tasksAdapter.setLocationTdl(tdlInfo);
                         tasksAdapter.setTasks();
-                    } catch (JSONException e) {
+                    } catch (JSONException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }, error -> Log.d(TAG, error.toString())) {

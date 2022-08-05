@@ -1,12 +1,6 @@
 package com.example.daydayapp.fragments.leaderboard;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +9,15 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.daydayapp.MainActivity;
@@ -28,6 +29,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MyScoreTab extends Fragment {
 
@@ -37,6 +40,7 @@ public class MyScoreTab extends Fragment {
     private int score;
     private int fullScore;
     private int competeUserScore;
+    private int mStatusCode = 200;
     private String competeUserName;
 
     private ProgressBar scoreBar,
@@ -78,41 +82,50 @@ public class MyScoreTab extends Fragment {
         compete_me_score = requireView().findViewById(R.id.score_me);
         compete_other_score = requireView().findViewById(R.id.score_other);
 
-        // TODO: get compete user name, score
-//        competeUserName = "Victor Pei";
-//        competeUserScore = 20;
-//        compete_other_score.setText(String.valueOf(competeUserScore));
-//        competeUserNameTv.setText(competeUserName);
+        final String url = "http://13.89.36.134:8000/opponent";
+        Timer refreshCompete = new Timer();
+        refreshCompete.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                        response -> {
+                            try {
+                                Log.d(TAG, "Successful");
+                                String id = (String) response.get("id");
+                                if (id.equals("no opponent")) {
+                                    competeLayout.setVisibility(View.GONE);
+                                } else {
+                                    competeButton.setVisibility(View.GONE);
+                                    competeUserName = response.getString("name");
+                                    competeUserScore = response.getInt("score");
+                                    compete_other_score.setText(String.valueOf(competeUserScore));
+                                    competeUserNameTv.setText(competeUserName);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }, error -> Log.d(TAG, error.toString())) {
+                    /**
+                     * Passing some request headers
+                     * Set API Key
+                     */
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", main.getAccount().getIdToken());
+                        headers.put("Content-Type", "application/json");
+                        return headers;
+                    }
+                };
 
-        if (competeUserName == null || competeUserName.trim().isEmpty()) {
-            competeLayout.setVisibility(View.GONE);
-        } else {
-            competeButton.setVisibility(View.GONE);
-            competeUserNameTv.setText(competeUserName);
-        }
-
-        competeButton.setOnClickListener(v -> {
-            competeUserName = "Victor Pei";
-            competeUserScore = 20;
-            compete_other_score.setText(String.valueOf(competeUserScore));
-            competeUserNameTv.setText(competeUserName);
-            setScore(score);
-
-            // TODO: change sleep to request
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                queue.add(jsonRequest);
             }
-
-            competeButton.setVisibility(View.GONE);
-            competeLayout.setVisibility(View.VISIBLE);
-        });
+        },0,86400000);
 
         displayScore();
     }
 
-    public void setScore (int score) {
+    public void setScore(int score) {
         this.score = score;
         if (scoreBar != null) {
             setProgress(score);
@@ -161,7 +174,10 @@ public class MyScoreTab extends Fragment {
 
     private void setCompeteProgress(int score) {
         int totalScore = score + competeUserScore;
-        competeBar.setProgress((score * 100) / totalScore);
+        if (totalScore == 0)
+            competeBar.setProgress(50);
+        else
+            competeBar.setProgress((score * 100) / totalScore);
     }
 
     private void setProgress(int score) {
@@ -172,6 +188,7 @@ public class MyScoreTab extends Fragment {
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, jsonContent,
                 response -> {
                     Log.d(TAG, "Successful");
+                    Log.d(TAG, String.valueOf(mStatusCode));
                     try {
                         JSONArray tdl = (JSONArray) response.get("tasklist");
                         fullScore = getFullScore(tdl);
@@ -196,6 +213,14 @@ public class MyScoreTab extends Fragment {
                 headers.put("Authorization", main.getAccount().getIdToken());
                 headers.put("Content-Type", "application/json");
                 return headers;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                if (response != null) {
+                    mStatusCode = response.statusCode;
+                }
+                return super.parseNetworkResponse(response);
             }
         };
 

@@ -1,12 +1,5 @@
 package com.example.daydayapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -14,10 +7,20 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.daydayapp.fragments.friends.FriendsFragment;
@@ -34,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     private static final String TAG = "Main";
     private GoogleSignInAccount account;
     private GoogleSignInClient mGoogleSignInClient;
+    private RequestQueue queue;
     private final int RC_SIGN_IN = 1;
 
     private final FragmentManager fm = getSupportFragmentManager();
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        queue = Volley.newRequestQueue(MainActivity.this);
 
         // Read client id from manifest metadata
         Bundle metadata = null;
@@ -196,6 +203,36 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         } else {
             this.account = account;
 
+            // Check if user is already set age and gender
+            final String url = "http://13.89.36.134:8000/user/flag";
+            HashMap<String, String> content = new HashMap<>();
+            JSONObject jsonContent = new JSONObject(content);
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, jsonContent,
+                    response -> {
+                        Log.d(TAG, "Successful");
+                        try {
+                            boolean flag = (boolean) response.get("flag");
+                            if (!flag)
+                                askAgeAndGender();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, error -> Log.d(TAG, error.toString())) {
+                /**
+                 * Passing some request headers
+                 * Set API Key
+                 */
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", MainActivity.this.getAccount().getIdToken());
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+
+            queue.add(jsonRequest);
+
             tdlFragment = new TdlFragment(MainActivity.this);
             friendsFragment = new FriendsFragment(MainActivity.this);
             profileFragment = new ProfileFragment(MainActivity.this);
@@ -228,6 +265,99 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 }
             }, 0, 300000);
         }
+    }
+
+    private void askAgeAndGender() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final View view = MainActivity.this.getLayoutInflater().inflate(R.layout.number_picker_dialog, null);
+        builder.setView(view);
+        builder.setTitle("Choose your age: ");
+        final NumberPicker picker = view.findViewById(R.id.picker);
+
+        picker.setMinValue(0);
+        picker.setMaxValue(100);
+        picker.setValue(25);
+
+        builder.setPositiveButton(android.R.string.ok, (dialog, id) -> {
+            // Positive button action
+            final String url = "http://13.89.36.134:8000/user/age";
+            HashMap<String, Integer> content = new HashMap<>();
+            content.put("age", picker.getValue());
+            JSONObject jsonContent = new JSONObject(content);
+            final String mRequestBody = jsonContent.toString();
+            StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, response -> {
+                Log.i(TAG, response);
+                }, error -> Log.e(TAG, error.toString())) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+                @Override
+                public byte[] getBody() {
+                    return mRequestBody.getBytes(StandardCharsets.UTF_8);
+                }
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", MainActivity.this.getAccount().getIdToken());
+                    return headers;
+                }
+            };
+            queue.add(stringRequest);
+
+        }).setNegativeButton(android.R.string.cancel, (dialog, id) -> {
+            // Negative button action
+        });
+
+        builder.create().show();
+
+        final View genderView = MainActivity.this.getLayoutInflater().inflate(R.layout.number_picker_dialog_2, null);
+        AlertDialog.Builder genderBuilder = new AlertDialog.Builder(MainActivity.this);
+        genderBuilder.setView(genderView);
+        genderBuilder.setTitle("Choose your gender: ");
+        final NumberPicker genderPicker = genderView.findViewById(R.id.picker2);
+        final String[] gender = {" ", "male", "female", "other"};
+
+        NumberPicker.Formatter formatter = value -> gender[value];
+
+        genderPicker.setMinValue(0);
+        genderPicker.setMaxValue(3);
+        genderPicker.setValue(0);
+        genderPicker.setFormatter(formatter);
+
+        genderBuilder.setPositiveButton(android.R.string.ok, (dialog, id) -> {
+            // Positive button action
+            if (gender[genderPicker.getValue()].equals("other") || gender[genderPicker.getValue()].equals(" "))
+                return;
+            final String url = "http://13.89.36.134:8000/user/gender";
+            HashMap<String, String> content = new HashMap<>();
+            content.put("gender", gender[genderPicker.getValue()]);
+            JSONObject jsonContent = new JSONObject(content);
+            final String mRequestBody = jsonContent.toString();
+            StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, response -> {
+                Log.i(TAG, response);
+                }, error -> Log.e(TAG, error.toString())) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+                @Override
+                public byte[] getBody() {
+                    return mRequestBody.getBytes(StandardCharsets.UTF_8);
+                }
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", MainActivity.this.getAccount().getIdToken());
+                    return headers;
+                }
+            };
+            queue.add(stringRequest);
+        }).setNegativeButton(android.R.string.cancel, (dialog, id) -> {
+            // Negative button action
+        });
+
+        genderBuilder.create().show();
     }
 
     @Override

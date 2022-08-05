@@ -29,7 +29,9 @@ public class FriendPageTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
-    public void checkFriendsFragmentAndClickAddButton() {
+    public void checkFriendsFragmentAndClickAddButton() throws InterruptedException {
+        Thread.sleep(1000);
+
         // Click friend button in the bottom navigation bar
         onView(withId(R.id.friends)).perform(click());
 
@@ -47,6 +49,8 @@ public class FriendPageTest {
         // Check if new friend textView is displayed and the text is correct
         onView(withId(R.id.newFriendTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.newFriendTextView)).check(matches(withText("Add new friend")));
+
+        Thread.sleep(500);
     }
 
     @Test

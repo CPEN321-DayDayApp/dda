@@ -34,4 +34,5 @@
     <string name="me">Me</string>
     <string name="start_compete">Start Compete</string>
     <string name="compete_result">Compete Result:</string>
+    <string name="cannot_find_opponent">Cannot find opponent!</string>
 </resources>

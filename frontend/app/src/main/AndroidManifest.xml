@@ -29,12 +29,6 @@
             android:value="${CLIENT_ID}" />
 
         <activity
-            android:name=".StartWork"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_start_work"
-            android:theme="@style/Theme.DayDayApp.Fullscreen" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

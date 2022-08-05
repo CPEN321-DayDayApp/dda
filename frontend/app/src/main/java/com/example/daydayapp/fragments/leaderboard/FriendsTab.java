@@ -1,6 +1,10 @@
 package com.example.daydayapp.fragments.leaderboard;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,18 +12,34 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.daydayapp.MainActivity;
+import com.example.daydayapp.R;
 import com.example.daydayapp.adapter.LBAdapter;
 import com.example.daydayapp.model.LBModel;
-import com.example.daydayapp.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FriendsTab extends Fragment {
+    private static final String TAG = "Flb";
+    private final MainActivity main;
+    private RequestQueue queue;
+
+    public FriendsTab(MainActivity main) {
+        this.main = main;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,32 +55,56 @@ public class FriendsTab extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        queue = Volley.newRequestQueue(requireActivity());
         List<LBModel> friendRankList = new ArrayList<>();
         LBAdapter lBAdapter = new LBAdapter(requireActivity());
         RecyclerView friendLBListRecyclerView = requireView().findViewById(R.id.friendLBListRecyclerView);
         friendLBListRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         friendLBListRecyclerView.setAdapter(lBAdapter);
 
-        LBModel rank1 = new LBModel();
-        rank1.setName("John");
-        rank1.setRank(1);
-        friendRankList.add(rank1);
+        Timer refreshFriendsLB = new Timer();
+        refreshFriendsLB.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                final String url = "http://13.89.36.134:8000/leaderboard/friend";
+                HashMap<String, String> content = new HashMap<>();
+                JSONObject jsonContent = new JSONObject(content);
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, jsonContent,
+                        response -> {
+                            Log.d(TAG, "Successful");
+                            try {
+                                //TODO: change get
+                                JSONArray friendsLB = (JSONArray) response.get("friendboard");
+                                JSONObject user;
+                                friendRankList.clear();
+                                for (int i = 0; i < friendsLB.length(); i++) {
+                                    LBModel rank = new LBModel();
+                                    user = (JSONObject) friendsLB.get(i);
+                                    rank.setName(user.get("name").toString());
+                                    rank.setRank((Integer) user.get("rank"));
+                                    rank.setScore((Integer) user.get("score"));
+                                    friendRankList.add(rank);
+                                }
+                                lBAdapter.setRank(friendRankList);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }, error -> Log.d(TAG, error.toString())) {
+                    /**
+                     * Passing some request headers
+                     * Set API Key
+                     */
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", main.getAccount().getIdToken());
+                        headers.put("Content-Type", "application/json");
+                        return headers;
+                    }
+                };
 
-        LBModel rank2 = new LBModel();
-        rank2.setName("Clara");
-        rank2.setRank(2);
-        friendRankList.add(rank2);
-
-        LBModel rank3 = new LBModel();
-        rank3.setName("Victor");
-        rank3.setRank(3);
-        friendRankList.add(rank3);
-
-        LBModel rank4 = new LBModel();
-        rank4.setName("Someone");
-        rank4.setRank(4);
-        friendRankList.add(rank4);
-
-        lBAdapter.setRank(friendRankList);
+                queue.add(jsonRequest);
+            }
+        },0,30000);
     }
 }
