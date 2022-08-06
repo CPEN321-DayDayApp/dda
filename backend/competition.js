@@ -26,7 +26,7 @@ function Competition(userdb, leaderdb) {
     this.assignNewOpponent = function () {
         return new Promise((resolve, reject) => {
             userdb.getAllUsers().then(users => {
-                if (users.length != 0) {
+                if(users.length==0){
                     let predictInput = [];
                     users.forEach(element => {
                         predictInput.push(element.age)

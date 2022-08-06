@@ -61,6 +61,18 @@ module.exports = () => describe('integration test', () => {
             token_victor = result['id_token']
         })
     });
+    test("post competition: no users", (done) => {
+        request(app)
+            .post('/competition')
+            .set('Authorization', token_author)
+            .set('Connection', 'keep-alive')
+            .set('Content-Type', 'application/json')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err)
+                return done();
+            })
+    });
     test("post user, add user", (done) => {
         request(app)
             .post('/user')
@@ -982,36 +994,7 @@ module.exports = () => describe('integration test', () => {
                 return done();
             })
     });
-    test("post user, add user", (done) => {
-        request(app)
-            .post('/user')
-            .set('Authorization', token_author)
-            .set('Connection', 'keep-alive')
-            .set('Content-Type', 'application/json')
-            .send({
-                "token": 123321
-            })
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err)
-                return done();
-            })
-    });
-    test("post user, add user", (done) => {
-        request(app)
-            .post('/user')
-            .set('Authorization', token_clara)
-            .set('Connection', 'keep-alive')
-            .set('Content-Type', 'application/json')
-            .send({
-                "token": 123321
-            })
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err)
-                return done();
-            })
-    });
+    
     test("post user, add user", (done) => {
         request(app)
             .post('/user')
@@ -1021,18 +1004,6 @@ module.exports = () => describe('integration test', () => {
             .send({
                 "token": 123321
             })
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err)
-                return done();
-            })
-    });
-    test("post competition", (done) => {
-        request(app)
-            .post('/competition')
-            .set('Authorization', token_author)
-            .set('Connection', 'keep-alive')
-            .set('Content-Type', 'application/json')
             .expect(200)
             .end(function (err, res) {
                 if (err) return done(err)
@@ -1054,57 +1025,12 @@ module.exports = () => describe('integration test', () => {
                 return done();
             })
     });
-    // test("post competition", (done) => {
-    //     request(app)
-    //         .post('/competition')
-    //         .set('Authorization', token_author)
-    //         .set('Connection', 'keep-alive')
-    //         .set('Content-Type', 'application/json')
-    //         .expect(200)
-    //         .end(function (err, res) {
-    //             if (err) return done(err)
-    //             return done();
-    //         })
-    // });
-    test("post user, add user", (done) => {
+    test("post competition", (done) => {
         request(app)
-            .post('/user')
+            .post('/competition')
             .set('Authorization', token_author)
             .set('Connection', 'keep-alive')
             .set('Content-Type', 'application/json')
-            .send({
-                "token": 123321
-            })
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err)
-                return done();
-            })
-    });
-    test("post user, add user", (done) => {
-        request(app)
-            .post('/user')
-            .set('Authorization', token_clara)
-            .set('Connection', 'keep-alive')
-            .set('Content-Type', 'application/json')
-            .send({
-                "token": 123321
-            })
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err)
-                return done();
-            })
-    });
-    test("post user, add user", (done) => {
-        request(app)
-            .post('/user')
-            .set('Authorization', token_victor)
-            .set('Connection', 'keep-alive')
-            .set('Content-Type', 'application/json')
-            .send({
-                "token": 123321
-            })
             .expect(200)
             .end(function (err, res) {
                 if (err) return done(err)
