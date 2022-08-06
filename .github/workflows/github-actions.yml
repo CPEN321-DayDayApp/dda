@@ -3,11 +3,7 @@ name: backend test
 on: 
   push:
     branches:
-      - backend_test 
       - main
-      - GitHub_action
-      - leaderboard
-      - backend_final
   pull_request:
     branches:  
       - main 
