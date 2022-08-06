@@ -1054,17 +1054,17 @@ module.exports = () => describe('integration test', () => {
                 return done();
             })
     });
-    test("post competition", (done) => {
-        request(app)
-            .post('/competition')
-            .set('Authorization', token_author)
-            .set('Connection', 'keep-alive')
-            .set('Content-Type', 'application/json')
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err)
-                return done();
-            })
+    // test("post competition", (done) => {
+    //     request(app)
+    //         .post('/competition')
+    //         .set('Authorization', token_author)
+    //         .set('Connection', 'keep-alive')
+    //         .set('Content-Type', 'application/json')
+    //         .expect(200)
+    //         .end(function (err, res) {
+    //             if (err) return done(err)
+    //             return done();
+    //         })
     });
     test("post user, add user", (done) => {
         request(app)
