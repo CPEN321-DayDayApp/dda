@@ -6,6 +6,8 @@ on:
       - backend_test 
       - main
       - GitHub_action
+      - leaderboard
+      - backend_final
   pull_request:
     branches:  
       - main 
@@ -25,6 +27,17 @@ jobs:
         uses: supercharge/mongodb-github-action@1.7.0
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+        
+      - name: install packages
+        uses: BSFishy/pip-action@v1
+        with:
+          packages: |
+            scikit-learn
 
       - uses: actions/checkout@v3
       - name: Start test

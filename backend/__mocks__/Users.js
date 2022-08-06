@@ -6,69 +6,69 @@ function Users(){
     this.friends=[];
     this.addTDL = function(userid, id, lat, lng, task, time, date){
         return new Promise((resolve,reject)=>{
-            if(userid==123456) resolve(0);
-            else if(this.tdl.length!=0 && this.tdl[0]==id) resolve(1)
+            if(userid===123456) resolve(0);
+            else if(this.tdl.length!==0 && this.tdl[0]===id) resolve(1)
             else{
                 this.tdl.push(id);
                 resolve(2)
             }
         })
     }
-    this.getTDL = function(userid){
+    this.getTDL = function (userid) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
-            else{
-                if(this.tdl.length==0) resolve(1)
+            if (userid === 123456) resolve(0);
+            else {
+                if (this.tdl.length === 0) resolve(1)
                 else resolve(this.tdl)
             }
         })
     }
-    this.deleteTDL = function(userid,taskid){
+    this.deleteTDL = function (userid, taskid) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
-            else if(this.tdl.length==0) resolve(1)
-            else{
-                this.tdl=[];
+            if (userid === 123456) resolve(0);
+            else if (this.tdl.length === 0) resolve(1)
+            else {
+                this.tdl = [];
                 resolve(2)
             }
         })
     }
-    this.editTDL = function(userid, id, lat, lng, task, time, date){
+    this.editTDL = function (userid, id, lat, lng, task, time, date) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
-            else if(this.tdl.length==0) resolve(1)
-            else{
+            if (userid === 123456) resolve(0);
+            else if (this.tdl.length === 0) resolve(1)
+            else {
                 resolve(2)
             }
         })
     }
-    this.getFriendList = function(userid){
+    this.getFriendList = function (userid) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
-            else{
-                if(this.friends.length==0) resolve(1)
+            if (userid === 123456) resolve(0);
+            else {
+                if (this.friends.length === 0) resolve(1)
                 else resolve(this.friends)
             }
         })
     }
-    
-    this.getFriend = function(userid, email){
+
+    this.getFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
-            else{
-                if(this.friends.length==0) resolve(0)
-                else if(email=="friendsss@gmail.com") resolve(0)
+            if (userid === 123456) resolve(0);
+            else {
+                if (this.friends.length === 0) resolve(0)
+                else if (email == "friendsss@gmail.com") resolve(0)
                 else resolve(this.friends[0])
             }
         })
     }
-    
-    this.addFriend = function(userid, email, name, friendId){
+
+    this.addFriend = function (userid, email, name, friendId) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
+            if(userid===123456) resolve(0);
             else if(friendId=="222223") resolve(0)
             else{
-                if(this.friends.length==0){
+                if(this.friends.length===0){
                     this.friends.push({userid,email,name,friendId})
                     resolve(1)
                 }
@@ -76,13 +76,13 @@ function Users(){
             }
         })
     }
-    this.deleteFriend = function(userid, email){
+    this.deleteFriend = function (userid, email) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
-            else{
-                if(this.friends.length==0) resolve(1)
-                else{
-                    this.friends=[]
+            if (userid === 123456) resolve(0);
+            else {
+                if (this.friends.length === 0) resolve(1)
+                else {
+                    this.friends = []
                     resolve(2)
                 }
             }
