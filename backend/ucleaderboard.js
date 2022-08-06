@@ -1,4 +1,4 @@
-const {app,db} = require('./app');
+const {app,db, db2} = require('./app');
 const request = require('supertest');
 const https = require('https');
 var token_author=0;
@@ -43,6 +43,7 @@ function postCode(post_data) {
 module.exports = () => describe('leaderboard test', () => { 
     beforeAll(async () => {
       connection = await db.connected;
+      connection2 = await db2.connected;
       await postCode(post_data_author).then(result=>{
         token_author=result['id_token']
       })

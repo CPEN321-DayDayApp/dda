@@ -9,15 +9,15 @@ const uclocation = require('./uclocation')
 const ucinfo = require('./ucinfo')
 const ucpn = require('./ucpn')
 describe('sequentially run tests', () => {
-   test1();
+   // test1();
    // test2();
    // test3();
-   uctodolist();
-   ucfriend();
-   uclocation();
-   ucinfo();
-   ucpn();
+   // uctodolist();
+   // ucfriend();
+   // uclocation();
+   // ucinfo();
+   // ucpn();
    uccompetition();
-   ucleaderboard();
+   //ucleaderboard();
 })
 

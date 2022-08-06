@@ -1,6 +1,7 @@
 const {app,db} = require('./app');
 const request = require('supertest');
 const https = require('https');
+jest.setTimeout(10000);
 var token_author=0;
 var token_victor=0;
 var token_clara=0;
@@ -100,6 +101,18 @@ module.exports = () => describe('leaderboard test', () => {
           return done();
         })
     });
+    test("put score: successful", (done) => {
+      request(app)
+        .put('/user/score')
+        .set('Authorization', token_author)
+        .set('Content-Type', 'application/json')
+        .send({"score": 66})
+        .expect(200)
+        .end(function(err,res){
+          if(err) return done(err)
+          return done();
+        })
+    });
     test("post competition", (done) => {
       request(app)
         .post('/competition')
@@ -111,5 +124,4 @@ module.exports = () => describe('leaderboard test', () => {
           return done();
         })
     });
-    
   });
