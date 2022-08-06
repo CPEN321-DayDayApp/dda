@@ -16,6 +16,7 @@ function postCode(post_data) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Connection': 'keep-alive',
           'Content-Length': 279,
           'user-agent': 'google-oauth-playground'
       }
@@ -59,6 +60,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -71,6 +73,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -83,6 +86,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": "f6zMjW6A310:APA91bG7nrXVYj-nCgJrsRTuFE9kMg_vFLdOST77xAtjPeP0uFrZVOe-SP7wmU8i0s3_Y1W8SRCJaD3nxoIB7K0eJOiVTop5DV_f9h3rvdldngE2GpSNqwco98hSXyFAwqVDAYDeePKc"})
         .expect(200)
@@ -95,6 +99,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/status')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"status": true})
         .expect(404)
@@ -108,6 +113,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"name":'Chunhao Zhu',"friendId":"105435138784111381037"})
         .expect(200)
@@ -120,6 +126,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/status')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"status": true})
         .expect(200)
@@ -132,6 +139,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/status')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"status": true})
         .expect(200)
@@ -144,6 +152,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/score')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"score": 66})
         .expect(404)
@@ -156,6 +165,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/score')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"score": "jg"})
         .expect(400)
@@ -168,6 +178,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/score')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"score": 66})
         .expect(200)
@@ -180,6 +191,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/token')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 8979359})
         .expect(404)
@@ -193,6 +205,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/token')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 8979359})
         .expect(200)

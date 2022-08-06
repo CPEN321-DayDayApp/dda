@@ -16,6 +16,7 @@ function postCode(post_data) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Connection': 'keep-alive',
           'Content-Length': 279,
           'user-agent': 'google-oauth-playground'
       }
@@ -59,6 +60,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -71,6 +73,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -83,6 +86,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": "f6zMjW6A310:APA91bG7nrXVYj-nCgJrsRTuFE9kMg_vFLdOST77xAtjPeP0uFrZVOe-SP7wmU8i0s3_Y1W8SRCJaD3nxoIB7K0eJOiVTop5DV_f9h3rvdldngE2GpSNqwco98hSXyFAwqVDAYDeePKc"})
         .expect(200)
@@ -96,6 +100,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/tdl')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"taskId":111111,"lat":99.9,"lng":88.8,"task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(404)
@@ -108,6 +113,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/tdl')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"taskId":111111,"lat":"afasf","lng":"fsbaf","task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(400)
@@ -120,6 +126,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/tdl')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"taskId":111111,"lat":99.9,"lng":88.8,"task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(200)
@@ -132,6 +139,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/tdl')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"taskId":111111,"lat":99.9,"lng":88.8,"task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(405)
@@ -144,6 +152,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/tdl')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -155,6 +164,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/tdl')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -166,6 +176,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/tdl/111111')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat":99.9,"lng":88.8,"task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(404)
@@ -178,6 +189,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/tdl/111111')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat":99.9,"lng":"avs","task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(400)
@@ -190,6 +202,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/tdl/111111')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat":99.9,"lng":88.8,"task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(200)
@@ -202,6 +215,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/tdl/111111')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -213,6 +227,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/tdl/afddbfds')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(400)
         .end(function(err,res){
@@ -224,6 +239,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/tdl/111111')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -235,6 +251,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/tdl/111111')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(405)
         .end(function(err,res){
@@ -246,6 +263,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/tdl/111111')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat":99.9,"lng":88.8,"task":"BBQ","time":30,"date":"Jan 11st"})
         .expect(405)
@@ -258,6 +276,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/tdl')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(201)
         .end(function(err,res){

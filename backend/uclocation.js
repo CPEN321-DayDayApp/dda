@@ -16,6 +16,7 @@ function postCode(post_data) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Connection': 'keep-alive',
           'Content-Length': 279,
           'user-agent': 'google-oauth-playground'
       }
@@ -59,6 +60,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -71,6 +73,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -83,6 +86,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": "f6zMjW6A310:APA91bG7nrXVYj-nCgJrsRTuFE9kMg_vFLdOST77xAtjPeP0uFrZVOe-SP7wmU8i0s3_Y1W8SRCJaD3nxoIB7K0eJOiVTop5DV_f9h3rvdldngE2GpSNqwco98hSXyFAwqVDAYDeePKc"})
         .expect(200)
@@ -96,6 +100,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -107,6 +112,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat":'Billy Yan',"lng":"notexist"})
         .expect(400)
@@ -119,6 +125,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/location')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat": 99.9,"lng":90.8})
         .expect(404)
@@ -131,6 +138,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat": 99.9,"lng":90.8})
         .expect(200)
@@ -143,6 +151,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"lat": 99.9,"lng":90.8})
         .expect(200)
@@ -155,6 +164,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/location')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -167,6 +177,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -191,6 +202,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .set('lat',"abc")
         .set('lng',"90.8")
@@ -204,6 +216,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .set('lat',"99.9")
         .set('lng',"90.8")
@@ -217,6 +230,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/location')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .set('lat',"99.9")
         .set('lng',"90.8")

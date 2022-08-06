@@ -16,6 +16,7 @@ function postCode(post_data) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Connection': 'keep-alive',
           'Content-Length': 279,
           'user-agent': 'google-oauth-playground'
       }
@@ -59,6 +60,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -71,6 +73,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -83,6 +86,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": "f6zMjW6A310:APA91bG7nrXVYj-nCgJrsRTuFE9kMg_vFLdOST77xAtjPeP0uFrZVOe-SP7wmU8i0s3_Y1W8SRCJaD3nxoIB7K0eJOiVTop5DV_f9h3rvdldngE2GpSNqwco98hSXyFAwqVDAYDeePKc"})
         .expect(200)
@@ -96,6 +100,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/pn')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"email": "friend@gmail.com"})
         .expect(404)
@@ -108,6 +113,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/pn')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"email": "friendgmail.com"})
         .expect(400)
@@ -120,6 +126,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/pn')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"email": "friendsss@gmail.com"})
         .expect(405)
@@ -132,6 +139,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/pn')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"email": "zhuchunhao0330@gmail.com"})
         .expect(200)
@@ -144,6 +152,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/status')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"status": true})
         .expect(200)
@@ -156,6 +165,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/pn')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"email": "zhuchunhao0330@gmail.com"})
         .expect(201)
@@ -168,6 +178,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .put('/user/status')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"status": false})
         .expect(200)
@@ -180,6 +191,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){

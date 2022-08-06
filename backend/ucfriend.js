@@ -16,6 +16,7 @@ function postCode(post_data) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Connection': 'keep-alive',
           'Content-Length': 279,
           'user-agent': 'google-oauth-playground'
       }
@@ -59,6 +60,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -71,6 +73,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -83,6 +86,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": "f6zMjW6A310:APA91bG7nrXVYj-nCgJrsRTuFE9kMg_vFLdOST77xAtjPeP0uFrZVOe-SP7wmU8i0s3_Y1W8SRCJaD3nxoIB7K0eJOiVTop5DV_f9h3rvdldngE2GpSNqwco98hSXyFAwqVDAYDeePKc"})
         .expect(200)
@@ -96,6 +100,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/friend/friend@gmail.com')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"name":'Billy Yan',"friendId":"444444"})
         .expect(404)
@@ -108,6 +113,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/friend/notexist@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"name":'Eva Wang',"friendId":"333333"})
         .expect(404)
@@ -120,6 +126,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/friend/notexist@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"name":'Billy Yan',"friendId":"notexist"})
         .expect(400)
@@ -132,6 +139,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"name":'Chunhao Zhu',"friendId":"105435138784111381037"})
         .expect(200)
@@ -144,6 +152,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .post('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"name":'Chunhao Zhu',"friendId":"105435138784111381037"})
         .expect(201)
@@ -156,6 +165,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -167,6 +177,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -178,6 +189,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend/friendgmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(400)
         .end(function(err,res){
@@ -189,6 +201,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend/friend@gmail.com')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -200,6 +213,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend/friendsss@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -211,6 +225,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -222,6 +237,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/friend/friend@gmail.com')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(404)
         .end(function(err,res){
@@ -233,6 +249,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/friend/friendgmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(400)
         .end(function(err,res){
@@ -244,6 +261,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -255,6 +273,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .delete('/friend/zhuchunhao0330@gmail.com')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(405)
         .end(function(err,res){
@@ -266,6 +285,7 @@ module.exports = () => describe('integration test', () => {
       request(app)
         .get('/friend')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(201)
         .end(function(err,res){
