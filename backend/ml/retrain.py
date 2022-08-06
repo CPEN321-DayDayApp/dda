@@ -20,10 +20,10 @@ for line in sys.stdin:
     input.append(line)
 
 df_tmp = pd.DataFrame(input, columns=['age', 'gender', 'study', 'level'])
-df_new = df.append(df_tmp)
+df_new = pd.concat([df, df_tmp], ignore_index=True)
 
 # print(df_new.info())
-# df_new.to_csv('ml/dataset/final.csv')
+df_new.to_csv('ml/dataset/final.csv')
 
 def calc_acc(pred, exp):
     cnt = 0
@@ -34,8 +34,8 @@ def calc_acc(pred, exp):
     return cnt/len(pred)
 
 
-X = df.iloc[:, :-1].values
-Y = df.iloc[:, -1].values
+X = df_new.iloc[:, :-1].values
+Y = df_new.iloc[:, -1].values
 
 X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y, test_size=0.2, random_state=0)
