@@ -13,7 +13,7 @@ input = []
 for line in sys.stdin:
     if(line == "\n"):
         break
-    print(line)
+    # print(line)
     line = line.split(',')
     for i in range(len(line)):
         line[i] = int(line[i])
@@ -49,7 +49,7 @@ classifier = lm.LogisticRegression()
 classifier.fit(X_train, Y_train)
 Y_pred = classifier.predict(X_test)
 
-print(calc_acc(Y_pred, Y_test))
+# print(calc_acc(Y_pred, Y_test))
 
 with open('ml/model.pickle', 'wb') as f:
     pickle.dump(classifier, f, pickle.HIGHEST_PROTOCOL)
