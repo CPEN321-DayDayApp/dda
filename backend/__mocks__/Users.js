@@ -65,7 +65,7 @@ function Users(){
 
     this.addFriend = function (userid, email, name, friendId) {
         return new Promise((resolve, reject) => {
-            if(userid==123456) resolve(0);
+            if(userid===123456) resolve(0);
             else if(friendId=="222223") resolve(0)
             else{
                 if(this.friends.length===0){

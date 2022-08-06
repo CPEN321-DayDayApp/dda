@@ -66,7 +66,7 @@ function Info(user) {
     this.editToken = function (userid, token) {
         return new Promise((resolve, reject) => {
             user.editToken(userid, token).then(result=>{
-                if(result==0) resolve(404)
+                if(result===0) resolve(404)
                 else resolve(200)
             })
         })
