@@ -1065,7 +1065,7 @@ module.exports = () => describe('integration test', () => {
     //             if (err) return done(err)
     //             return done();
     //         })
-    });
+    // });
     test("post user, add user", (done) => {
         request(app)
             .post('/user')
