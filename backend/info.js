@@ -16,7 +16,7 @@ function Info(user) {
     this.getLocation = function (userid) {
         return new Promise((resolve, reject) => {
                 user.getLocation(userid).then(result=>{
-                    if(result==0) resolve(404)
+                    if(result===0) resolve(404)
                     else resolve(result)
                 })
             })

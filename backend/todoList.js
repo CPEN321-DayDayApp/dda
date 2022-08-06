@@ -17,8 +17,8 @@ function TodoList(user) {
     this.getTDL = function (userid) {
         return new Promise((resolve, reject) => {
                 user.getTDL(userid).then(result =>{
-                    if(result==0) resolve(404)
-                    else if(result==1) resolve(201)
+                    if(result===0) resolve(404)
+                    else if(result===1) resolve(201)
                     else resolve(result)
                 })
             })

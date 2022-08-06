@@ -6,8 +6,8 @@ function Users(){
     this.friends=[];
     this.addTDL = function(userid, id, lat, lng, task, time, date){
         return new Promise((resolve,reject)=>{
-            if(userid==123456) resolve(0);
-            else if(this.tdl.length!=0 && this.tdl[0]==id) resolve(1)
+            if(userid===123456) resolve(0);
+            else if(this.tdl.length!==0 && this.tdl[0]===id) resolve(1)
             else{
                 this.tdl.push(id);
                 resolve(2)
@@ -68,7 +68,7 @@ function Users(){
             if(userid==123456) resolve(0);
             else if(friendId=="222223") resolve(0)
             else{
-                if(this.friends.length==0){
+                if(this.friends.length===0){
                     this.friends.push({userid,email,name,friendId})
                     resolve(1)
                 }
