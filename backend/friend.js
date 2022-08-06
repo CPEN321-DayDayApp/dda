@@ -3,8 +3,8 @@ function Friend(user) {
     this.getFriendList = function (userid) {
         return new Promise((resolve, reject) => {
                 user.getFriendList(userid).then(result =>{
-                    if(result==0) resolve(404)
-                    else if(result==1) resolve(201)
+                    if(result===0) resolve(404)
+                    else if(result===1) resolve(201)
                     else resolve(result)
                 })
         })

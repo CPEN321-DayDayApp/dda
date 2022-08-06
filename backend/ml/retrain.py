@@ -13,16 +13,16 @@ input = []
 for line in sys.stdin:
     if(line == "\n"):
         break
-    print(line)
+    # print(line)
     line = line.split(',')
     for i in range(len(line)):
         line[i] = int(line[i])
     input.append(line)
 
 df_tmp = pd.DataFrame(input, columns=['age', 'gender', 'study', 'level'])
-df_new = df.append(df_tmp)
+df_new = pd.concat([df, df_tmp], ignore_index=True)
 
-print(df_new.info())
+# print(df_new.info())
 df_new.to_csv('ml/dataset/final.csv')
 
 def calc_acc(pred, exp):
@@ -49,7 +49,7 @@ classifier = lm.LogisticRegression()
 classifier.fit(X_train, Y_train)
 Y_pred = classifier.predict(X_test)
 
-print(calc_acc(Y_pred, Y_test))
+# print(calc_acc(Y_pred, Y_test))
 
 with open('ml/model.pickle', 'wb') as f:
     pickle.dump(classifier, f, pickle.HIGHEST_PROTOCOL)

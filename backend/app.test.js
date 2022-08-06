@@ -1,6 +1,4 @@
 const test1 = require('./test1');
-const test2 = require('./test2')
-const test3 = require('./test3')
 const uccompetition = require('./uccompetition')
 const ucleaderboard = require('./ucleaderboard')
 const uctodolist = require('./uctodolist')

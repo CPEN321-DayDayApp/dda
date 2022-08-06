@@ -29,19 +29,19 @@ function Competition(userdb, leaderdb) {
                 if (users.length != 0) {
                     let input = [];
                     users.forEach(element => {
-                        input.push(element.age)
-                        input.push(',')
-                        if (element.gender == 'male') input.push(0)
-                        else input.push(1)
-                        input.push(',')
-                        input.push(Math.round(element.score * SCORE_CONSTANT / 7))
-                        input.push('\n')
+                        predictInput.push(element.age)
+                        predictInput.push(',')
+                        if (element.gender == 'male') predictInput.push(0)
+                        else predictInput.push(1)
+                        predictInput.push(',')
+                        predictInput.push(Math.round(element.score * SCORE_CONSTANT / 7))
+                        predictInput.push('\n')
                     });
-                    // console.log(input)
-                    // console.log(input.join(''))
-                    predict.send(input.join(''));
+                    // console.log(predictInput)
+                    // console.log(predictInput.join(''))
+                    predict.send(predictInput.join(''));
                     predict.on('message', function (message) {
-                        // console.log(message);
+                        console.log(message);
                         let result = Array.from(message).map(Number);
                         console.log(result);
                         var num=0;
@@ -93,9 +93,9 @@ function Competition(userdb, leaderdb) {
                     retrainInput.push(',')
                     retrainInput.push(Math.round(user.score * SCORE_CONSTANT / 7))
                     retrainInput.push(',')
-                    let tmp = Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT));
+                    let tmp = 5 - Math.round(LEVEL_RANGE * user.score * SCORE_CONSTANT / (7 * DAILY_LIMIT));
                     if (tmp > LEVEL_RANGE) tmp = LEVEL_RANGE;
-                    if (tmp < 0) tmp = 0;
+                    if (tmp < 0) tmp = 1;
                     retrainInput.push(tmp)
                     retrainInput.push('\n')
                     let findUser = gb.find(obj => obj._id === user.userid);
