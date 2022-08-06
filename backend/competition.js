@@ -27,7 +27,7 @@ function Competition(userdb, leaderdb) {
         return new Promise((resolve, reject) => {
             userdb.getAllUsers().then(users => {
                 if (users.length != 0) {
-                    let input = [];
+                    let predictInput = [];
                     users.forEach(element => {
                         predictInput.push(element.age)
                         predictInput.push(',')
