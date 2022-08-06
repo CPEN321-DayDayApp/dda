@@ -17,6 +17,7 @@ function postCode(post_data) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Connection': 'keep-alive',
           'Content-Length': 279,
           'user-agent': 'google-oauth-playground'
       }
@@ -58,6 +59,7 @@ module.exports = () => describe('leaderboard test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -70,6 +72,7 @@ module.exports = () => describe('leaderboard test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_clara)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -82,6 +85,7 @@ module.exports = () => describe('leaderboard test', () => {
       request(app)
         .post('/user')
         .set('Authorization', token_victor)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"token": 123321})
         .expect(200)
@@ -94,6 +98,7 @@ module.exports = () => describe('leaderboard test', () => {
       request(app)
         .post('/competition')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
@@ -105,6 +110,7 @@ module.exports = () => describe('leaderboard test', () => {
       request(app)
         .put('/user/score')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .send({"score": 66})
         .expect(200)
@@ -117,6 +123,7 @@ module.exports = () => describe('leaderboard test', () => {
       request(app)
         .post('/competition')
         .set('Authorization', token_author)
+        .set('Connection', 'keep-alive')
         .set('Content-Type', 'application/json')
         .expect(200)
         .end(function(err,res){
