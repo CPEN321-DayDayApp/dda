@@ -27,7 +27,7 @@ function Competition(userdb, leaderdb) {
         return new Promise((resolve, reject) => {
             userdb.getAllUsers().then(users => {
                 if (users.length != 0) {
-                    let input = [];
+                    let predictInput = [];
                     users.forEach(element => {
                         predictInput.push(element.age)
                         predictInput.push(',')
@@ -66,11 +66,7 @@ function Competition(userdb, leaderdb) {
                             }
                         }
                     })
-                    predict.end(function (err, code, signal) {
-                        if (err) reject("Error: " + err);
-                        console.log('The exit code was: ' + code);
-                        console.log('The exit signal was: ' + signal);
-                    });
+                    predict.end();
                 }
                 else resolve(200)
             });
@@ -106,26 +102,21 @@ function Competition(userdb, leaderdb) {
                         num++;
                         let findOpponent = gb.find(obj => obj._id == opponent.id);
                         if (findUser !== undefined && updatedScore.find(response => response['userid'] === user.userid) === undefined && findOpponent !== undefined && updatedScore.find(response => response['userid'] === opponent.id) === undefined) {
-                            let currOpponent = opponent;
                             let rankScore2 = findOpponent.score;
-                            let score2 = currOpponent.score;
-                            let win = 0;
-                            if (score1 > score2) win = 1;
-                            if (score1 != score2) {
-                                let p1 = rankScore1 / (rankScore1 + rankScore2);
-                                let p2 = rankScore2 / (rankScore1 + rankScore2);
-                                rankScore1 = Math.round(rankScore1 + ELO_CONSTANT * (win - p1));
-                                rankScore2 = Math.round(rankScore2 + ELO_CONSTANT * (1 - win - p2));
-                            }
-                            updatedScore.push({
-                                "userid": currOpponent.id,
-                                "score": rankScore2
-                            });
+                            let score2 = opponent.score;
+                            let win = score1 > score2 ? 1 : 0;
+                            rankScore1 = Math.round(rankScore1 + ELO_CONSTANT * (win - rankScore1 / (rankScore1 + rankScore2)));
+                            rankScore2 = Math.round(rankScore2 + ELO_CONSTANT * (1 - win - rankScore2 / (rankScore1 + rankScore2)));
+                            updatedScore.push({"userid": opponent.id, "score": rankScore2});
+                            updatedScore.push({"userid": currUser.userid, "score": rankScore1});
+                        } else if (findOpponent !== undefined) {
                             updatedScore.push({
                                 "userid": currUser.userid,
                                 "score": rankScore1
                             });
-                            console.log(updatedScore)
+                            leaderdb.updateAllBoard(updatedScore).then(result => {
+                                resolve(result)
+                            });
                         }
                         if (num === result[1].length) {
                             this.retrainModel(retrainInput);
